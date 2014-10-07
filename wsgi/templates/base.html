@@ -1,0 +1,41 @@
+<!doctype html>
+<title>TodoApp -- Store your Todo items</title>
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+<meta charset="utf-8">
+<style>
+body {
+    padding-top: 60px;
+    padding-bottom: 100px;
+}
+</style>
+<link href="/static/css/superhero.min.css" rel="stylesheet">
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">FitGents</a>
+    </div>
+  </div>
+</nav> 
+ 
+{%- for category, message in get_flashed_messages(with_categories=true) %}
+  <p class="flask {{ category }}-flash">{{
+    "Error: " if category == 'error' }}{{ message }}</p>
+{%- endfor %}
+<div id="main" class="container">
+    {% block body %}{% endblock %}
+    <hr>
+    <footer id="footer">
+                <p class="pull-left">FitGents app built using Flask, SQLAlchemy, PostgreSQL , and Twitter Bootstrap</p>
+                <p class="pull-right"><a href="https://www.openshift.com/" target="_blank"><img alt="Powered by OpenShift" src="https://www.openshift.com/sites/default/files/images/powered-transparent-black.png"></a></p>     
+    </footer>
+</div>
