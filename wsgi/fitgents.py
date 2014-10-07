@@ -6,7 +6,7 @@ if not 'OPENSHIFT_POSTGRESQL_DB_URL' in os.environ:
 
 else:
 	SQLALCHEMY_DATABASE_URI = os.environ['OPENSHIFT_POSTGRESQL_DB_URL']
-	SQLALCHEMY_MIGRATE_REPO = '/var/lib/openshift/543420d2500446f95b00026b/app-root/data/db_repository'
+	SQLALCHEMY_MIGRATE_REPO = os.environ['OPENSHIFT_DATA_DIR'] + '/db_repository'
 
 SQLALCHEMY_ECHO = False
 SECRET_KEY = 'teh_secret'
