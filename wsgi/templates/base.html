@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <style>
 body {
-    padding-top: 60px;
-    padding-bottom: 100px;
+	padding-top: 60px;
+	padding-bottom: 100px;
 }
 </style>
 <link href="/static/css/superhero.min.css" rel="stylesheet">
@@ -13,38 +13,43 @@ body {
 <script src="/static/js/bootstrap.min.js"></script>
 
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-  <div class="container-fluid">
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="/">FitGents</a>
-      <ul class="nav navbar-nav navbar-right">
-        <li><a href="#">Signed in as User</a></li>
-      </ul>
-    </div>
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
-        <li><a href="#">Dashboard</a></li>
-        <li><a href="#">History</a></li>
-      </ul>
-  </div>
+	<div class="container-fluid">
+		<!-- Brand and toggle get grouped for better mobile display -->
+		<div class="navbar-header">
+		  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+			<span class="sr-only">Toggle navigation</span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+		</button>
+		<a class="navbar-brand" href="/">FitGents</a>
+		<ul class="nav navbar-nav navbar-right">
+			{% if g.user.name == "Guest" %}
+				<li><a href="#">Welcome, Guest!</a></li>
+				<li><a href="/login">Sign In</a></li>
+				<li><a href="/register">Register</a></li>
+			{% else %}
+				<li><a href="#">Hello, {{ g.user.name }}!</a></li>
+				<li><a href="#">Dashboard</a></li>
+				<li><a href="#">History</a></li>
+			{% endif %}
+		  </ul>
+		</div>
+	</div>
 </nav> 
  
 {%- for category, message in get_flashed_messages(with_categories=true) %}
   <p class="flask {{ category }}-flash">{{
-    "Error: " if category == 'error' }}{{ message }}</p>
+	"Error: " if category == 'error' }}{{ message }}</p>
 {%- endfor %}
 <div id="main" class="container">
-    {% block body %}{% endblock %}
-    <hr>
-    <footer id="footer">
-                <p class="pull-left">FitGents app built using Flask, SQLAlchemy, PostgreSQL , and Twitter Bootstrap</p>
-                <p class="pull-right"><a href="https://www.openshift.com/" target="_blank"><img alt="Powered by OpenShift" src="https://www.openshift.com/sites/default/files/images/powered-transparent-black.png"></a></p>     
-    </footer>
-</div>
+	{% block body %}{% endblock %}
 
+</div>
+<div class="container">
+	<hr>
+	<footer id="footer">
+				<p class="pull-left">FitGents app built using Flask, SQLAlchemy, PostgreSQL , and Twitter Bootstrap</p>
+				<p class="pull-right"><a href="https://www.openshift.com/" target="_blank"><img alt="Powered by OpenShift" src="https://www.openshift.com/sites/default/files/images/powered-transparent-black.png"></a></p>     
+	</footer>
+</div>
