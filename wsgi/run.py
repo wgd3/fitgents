@@ -173,7 +173,7 @@ def login():
 			except Exception as e:
 				print str(e)
 				flash("There was a problem logging in, check logs.", "warning")
-				return redirect(url_for("index"))
+				return redirect(url_for("login"))
 		
 		else:  # POST request with no data, or missing email address
 			flash("No email address given in form, try again", "warning")
@@ -211,6 +211,17 @@ def register():
 			# verify passwords match
 			if new_user_password == new_user_samepass:
 				print "User is registering with matching passwords!"
+				
+				try:
+					findUsersQuery = User.query.all()
+					for user in findUserQuery:
+						if user.name == new_user_name:
+							raise Exception
+						if user.email == new_user_email:
+							raise Exception
+				except Exception as e:
+					flash("User name or email has already been taken.", "info")
+					return redirect(url_for("login"))
 				
 				try:
 					entry = User(name = new_user_name, email = new_user_email, age = new_user_age, password=new_user_password)
