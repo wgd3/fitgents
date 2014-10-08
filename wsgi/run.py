@@ -24,10 +24,10 @@ class User(db.Model):
 	id = db.Column('user_id', db.Integer, primary_key=True)
 	name = db.Column(db.String(50))
 	email = db.Column(db.String(50))
-	start_weight = db.Column(db.Float)
-	start_bf = db.Column(db.Float)
 	age = db.Column(db.Integer)
-	history = db.relationship('UserHistory', backref='user', lazy='dynamic')
+	food_history = db.relationship('FoodHistory', backref='user', lazy='dynamic')
+	sleep_history = db.relationship('SleepHistory', backref='user', lazy='dynamic')
+	excercise_history = db.relationship('ExcerciseHistory', backref='user', lazy='dynamic')
 	_password = db.Column(db.LargeBinary(120))
 	_salt = db.Column(db.String(120))
 
@@ -134,9 +134,49 @@ def index():
 def login():
 	return render_template("login.html")
 
-@app.route("/register")
+@app.route("/register", methods=["GET", "POST"])
 def register():
-	return render_template("register.html")
+	if request.method == "GET":
+		if "user_id" in session:
+			flash("We've detected that someone is already signed in, no need to register!", "info")
+			return render_template("dashboard.html")
+		else:
+			return render_template("register.html")
+	elif request.method == "POST":
+		print "Detected POST request on registration page, processing new sign up."
+		try:
+			if request.form['inputName']:
+				print "Attempting to create user " + request.form['inputName']
+			new_user_name = request.form['inputName']
+			new_user_email = request.form['inputEmail']
+			new_user_age = request.form['inputAge']
+			new_user_password = request.form['inputPassword']
+			new_user_samepass = request.form['inputPassword']
+			
+			# verify passwords match
+			if new_user_password == new_user_samepass:
+				print "User is registering with matching passwords!"
+				
+				try:
+					entry = User(name = new_user_name, email = new_user_email, age = new_user_age)
+					entry.password(new_user_password)
+					print "%s password is %s and hashed as %s" % (new_user_name, new_user_password, String(entry.password()))
+					
+					db.session.add(entry)
+					db.session.commit()
+					
+				except Exception as e:
+					print str(e)
+					flash("Error adding entry to the database, try again.", "warning")
+					return render_template("registration.html")
+					
+		except Exception as e:
+			print str(e)
+			flash("Error gathering data from the form in the POST request", "warning")
+			return render_template("register.html")
+			
+	flash("Request made on registration that wasn't POST or GET, check the logs.", "warning")
+	return render_template("registration.html")
 
 @app.route("/food")
 @app.route("/<user>/food")

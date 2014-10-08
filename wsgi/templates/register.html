@@ -4,31 +4,37 @@
 
 <div class="col-md-6 col-md-offset-3">
 
-	<form class="form-horizontal">
+	<form class="form-horizontal" method="post" action="register">
 		<fieldset>
 			<legend>Register</legend>
 			<div class="form-group">
 				<label for="inputName" class="col-lg-2 control-label">Name</label>
 				<div class="col-lg-10">
-					<input class="form-control" id="inputName" placeholder="Name" type="text">
+					<input class="form-control" id="inputName" name="inputName" placeholder="Name" type="text">
 				</div>
 			</div>
 			<div class="form-group">
 				<label for="inputEmail" class="col-lg-2 control-label">Email</label>
 				<div class="col-lg-10">
-					<input class="form-control" id="inputEmail" placeholder="Email" type="text">
+					<input class="form-control" id="inputEmail" name="inputEmail" placeholder="Email" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="inputAge" class="col-lg-2 control-label">Age</label>
+				<div class="col-lg-2">
+					<input class="form-control" id="inputAge" name="inputAge" placeholder="Age" type="text">
 				</div>
 			</div>
 			<div class="form-group">
 				<label for="inputPassword" class="col-lg-2 control-label">Password</label>
 				<div class="col-lg-10">
-					<input class="form-control" id="inputPassword" placeholder="Password" type="password">
+					<input class="form-control" id="inputPassword" name="inputPassword" placeholder="Password" type="password">
 				</div>
 			</div>
 			<div class="form-group">
-				<label for="inputPassword" class="col-lg-2 control-label">Verify Password</label>
+				<label for="validatePassword" class="col-lg-2 control-label">Verify Password</label>
 				<div class="col-lg-10">
-					<input class="form-control" id="inputPassword" placeholder="Password" type="password">
+					<input class="form-control" id="validatePassword" name="validatePassword" placeholder="Password" type="password">
 				</div>
 			</div>
 			<div class="form-group">
