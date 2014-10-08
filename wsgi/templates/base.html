@@ -39,9 +39,13 @@ body {
 </nav> 
  
 {%- for category, message in get_flashed_messages(with_categories=true) %}
-  <p class="flask {{ category }}-flash">{{
-	"Error: " if category == 'error' }}{{ message }}</p>
+	
+	<div class="alert alert-dismissable alert-{{ category }} container">
+		<button type="button" class="close" data-dismiss="alert">×</button>
+		 {{ message }}
+	</div>
 {%- endfor %}
+
 <div id="main" class="container">
 	{% block body %}{% endblock %}
 

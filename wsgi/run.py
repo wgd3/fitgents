@@ -85,7 +85,9 @@ class ExcerciseHistory(db.Model):
 	user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
 	timestamp = db.Column(db.DateTime)
 
-# I assume this is called before each page request
+#############
+# Application decorators
+
 @app.before_request
 def load_user():
 	if "user_id" in session:
@@ -96,6 +98,32 @@ def load_user():
 		print "Found no user in session, using Guest"
 		
 	g.user = user
+
+@app.errorhandler(404)
+def page_not_found(e):
+	flash("Error 404 - Page Not Found", "danger")
+	print str(e)
+	return render_template('error.html')
+
+@app.errorhandler(403)
+def page_not_found(e):
+	flash("Error 403 - Access Forbidden", "danger")
+	print str(e)
+	return render_template('error.html')
+
+@app.errorhandler(410)
+def page_not_found(e):
+	flash("Error 410 - Page Gone", "danger")
+	print str(e)
+	return render_template('error.html')
+
+@app.errorhandler(500)
+def page_not_found(e):
+	flash("Error 500 - Internal Server Error", "danger")
+	print str(e)
+	return render_template('error.html')
+
+##############
 
 @app.route("/")
 @app.route("/index")
@@ -109,6 +137,31 @@ def login():
 @app.route("/register")
 def register():
 	return render_template("register.html")
+
+@app.route("/food")
+@app.route("/<user>/food")
+def food():
+	return render_template("food.html")
+
+@app.route("/excercise")
+@app.route("/<user>/excercise")
+def excercise():
+	return render_template("excercise.html")
+
+@app.route("/sleep")
+@app.route("/<user>/sleep")
+def sleep():
+	return render_template("sleep.html")
+
+@app.route("/statistics")
+@app.route("/<user>/statistics")
+def statistics():
+	return render_template("statistics.html")
+
+@app.route("/profile")
+@app.route("/<user>/profile")
+def profile():
+	return render_template("profile.html")
 
 if __name__ == "__main__":
 	app.run(debug = "True", host="0.0.0.0")
