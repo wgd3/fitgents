@@ -1,4 +1,4 @@
-import os, datetime
+import os, datetime, sys
 from flask import Flask
 from flask import render_template
 from flask import request, session, redirect, flash, g
@@ -40,7 +40,7 @@ class User(db.Model):
 	# here which will automatically hash our password
 	# when we provide it (i. e. user.password = "12345")
 	@password.setter
-	def password(self, value):
+	def set_password(self, value):
 		# When a user is first created, give them a salt
 		if self._salt is None:
 			self._salt = bytes(SystemRandom().getrandbits(128))
@@ -158,17 +158,18 @@ def register():
 				print "User is registering with matching passwords!"
 				
 				try:
-					entry = User(name = new_user_name, email = new_user_email, age = new_user_age)
-					entry.password(new_user_password)
-					print "%s password is %s and hashed as %s" % (new_user_name, new_user_password, String(entry.password()))
+					entry = User(name = new_user_name, email = new_user_email, age = new_user_age, password=new_user_password)
 					
 					db.session.add(entry)
 					db.session.commit()
 					
+					flash("User registration for %s was successful!" % new_user_name, "success")
+					return render_template("dashboard.html")
+					
 				except Exception as e:
 					print str(e)
 					flash("Error adding entry to the database, try again.", "warning")
-					return render_template("registration.html")
+					return render_template("register.html")
 					
 		except Exception as e:
 			print str(e)
@@ -176,7 +177,7 @@ def register():
 			return render_template("register.html")
 			
 	flash("Request made on registration that wasn't POST or GET, check the logs.", "warning")
-	return render_template("registration.html")
+	return render_template("register.html")
 
 @app.route("/food")
 @app.route("/<user>/food")

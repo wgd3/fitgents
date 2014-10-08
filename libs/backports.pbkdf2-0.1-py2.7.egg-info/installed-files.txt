@@ -1,0 +1,10 @@
+../backports/pbkdf2/__init__.py
+../backports/pbkdf2/__init__.pyc
+../backports/pbkdf2/_pbkdf2.so
+./
+namespace_packages.txt
+SOURCES.txt
+dependency_links.txt
+top_level.txt
+PKG-INFO
+../backports.pbkdf2-0.1-py2.7-nspkg.pth
