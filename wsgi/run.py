@@ -1,7 +1,7 @@
 import os, datetime, sys
 from flask import Flask
 from flask import render_template
-from flask import request, session, redirect, flash, g
+from flask import request, session, redirect, flash, g, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
 from random import SystemRandom
@@ -14,8 +14,8 @@ app = Flask(__name__)
 
 app.config.from_pyfile('fitgents.py')
 db = SQLAlchemy(app)
-lm = LoginManager()
-lm.init_app(app)
+#lm = LoginManager()
+#lm.init_app(app)
 
 ### Database table definitions ###
 
@@ -40,7 +40,7 @@ class User(db.Model):
 	# here which will automatically hash our password
 	# when we provide it (i. e. user.password = "12345")
 	@password.setter
-	def set_password(self, value):
+	def password(self, value):
 		# When a user is first created, give them a salt
 		if self._salt is None:
 			self._salt = bytes(SystemRandom().getrandbits(128))
@@ -91,7 +91,7 @@ class ExcerciseHistory(db.Model):
 @app.before_request
 def load_user():
 	if "user_id" in session:
-		user = User.query.filter_by(username=session["user_id"]).first()
+		user = User.query.filter_by(id=session["user_id"]).first()
 		print "Found user in session: %s" % user.name
 	else:
 		user = {"name": "Guest"}
@@ -130,9 +130,64 @@ def page_not_found(e):
 def index():
 	return render_template("dashboard.html")
 
-@app.route("/login")
+@app.route("/login", methods=["GET", "POST"])
 def login():
-	return render_template("login.html")
+	if request.method == "GET":
+		if "user_id" in session:
+			flash("Detected user %s already logged in!" % session["user_name"], "info")
+			return render_template("login.html")
+		else:
+			return render_template("login.html")
+	elif request.method == "POST":
+		if request.form['inputEmail']:
+			print "Attempting to log in user with email %s" % request.form['inputEmail']
+			
+			try:
+				findUserResult = User.query.filter_by(email=request.form['inputEmail']).count()
+				if findUserResult > 0:
+					print "Found at least one user with email %s" % request.form['inputEmail']
+					loginUser = User.query.filter_by(email=request.form['inputEmail']).first()
+					
+					print "Found a user to log in, checking entered password %s" % (request.form['inputPassword'])
+					print loginUser.__dict__
+					
+					if loginUser.is_valid_password(request.form['inputPassword']):
+						print "Passwork checks out! Logging in user"
+						
+						# set up session user
+						session['user_id'] = loginUser.id
+						session['user_name'] = loginUser.name
+						session['user_email'] = loginUser.email
+						
+						# session user set up, redirect to dashboard, logged in
+						return redirect(url_for("index"))
+						
+					else: # password check fails, redirect
+						flash("Email or password was incorrect, try again", "warning")
+						return redirect(url_for("login"))
+						
+				else:
+					flash("No users with email %s found in the database" % request.form['inputEmail'], "warning")
+					return render_template("login.html")
+					
+			except Exception as e:
+				print str(e)
+				flash("There was a problem logging in, check logs.", "warning")
+				return redirect(url_for("index"))
+		
+		else:  # POST request with no data, or missing email address
+			flash("No email address given in form, try again", "warning")
+			return redirect(url_for("login"))
+	
+	else:  # HTTP request given, not a GET or POST though
+		flash("HTTP request for login page detected, but method is not supported.", "warning")
+		return redirect(url_for("index"))
+		
+@app.route("/logout")
+def logout():
+	session.clear()
+	flash("Logged out successfully.", "success")
+	return redirect(url_for("index"))
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -200,9 +255,12 @@ def statistics():
 	return render_template("statistics.html")
 
 @app.route("/profile")
-@app.route("/<user>/profile")
-def profile():
-	return render_template("profile.html")
+def profile(*args):
+	if "user_id" in session: # session token found
+		return render_template("profile.html")
+	else:
+		flash("Must be logged in to view profiles.", "info")
+		return redirect(url_for("index"))
 
 if __name__ == "__main__":
 	app.run(debug = "True", host="0.0.0.0")

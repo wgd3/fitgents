@@ -1,7 +1,45 @@
-{% extends 'base.html %}
+{% extends 'base.html' %}
 
 {% block body %}
 
+<div class="row">
 
+	<div class="col-md-3">
+	
+		<div class="panel panel-primary">
+		
+			<div class="panel-heading">
+				<h2 class="panel-title">Profile <small>{{ g.user.name }}</small></h2>
+			</div>
+		
+			<div class="panel-body">
+				<table class="table table-condensed text-right">
+					<tbody>
+						<tr>
+							<th>155</th>
+						</tr>
+						<tr>
+							<td>pounds</td>
+						</tr>
+						<tr>
+							<th>20%</th>
+						</tr>
+						<tr>
+							<td>body fat</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		
+		</div>
+	
+	
+	</div>
+	
+	<div class="col-md-9">
+	
+	</div>
+
+</div>
 
 {% endblock %}
