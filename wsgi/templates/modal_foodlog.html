@@ -1,0 +1,69 @@
+<div class="modal" id="modal_food">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h4 class="modal-title">Add Food Data</h4>
+			</div>
+			
+			<div class="modal-body">
+				
+				<form class="form-horizontal" method="post" action="/food/new>
+					<fieldset>
+						
+						<div class="form-group">
+							<label for="inputDate" class="col-lg-2 control-label">Date</label>
+							<div class="col-lg-10">
+								<input class="form-control" id="inputDate" name="inputDate" placeholder="01/01/2014" type="date">
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label for="inputCalories" class="col-lg-2 control-label">Calories</label>
+							<div class="col-lg-10">
+								<input class="form-control" id="inputCalories" name="inputCalories" type="number">
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label for="inputProtein" class="col-lg-2 control-label">Protein (g)</label>
+							<div class="col-lg-10">
+								<input class="form-control" id="inputProtein" name="inputProtein" type="number">
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label for="inputCarbohydrates" class="col-lg-2 control-label">Carbohydrates (g)</label>
+							<div class="col-lg-10">
+								<input class="form-control" id="inputCarbohydrates" name="inputCarbohydrates" type="number">
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label for="inputFat" class="col-lg-2 control-label">Fat (g)</label>
+							<div class="col-lg-10">
+								<input class="form-control" id="inputFat" name="inputFat" type="number">
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label for="inputNotes" class="col-lg-2 control-label">Notes</label>
+							<div class="col-lg-10">
+								<textarea class="form-control" rows="3" id="inputNotes" name="inputNotes"></textarea>
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<div class="col-lg-10 col-lg-offset-2">
+								<button class="btn btn-default">Cancel</button>
+								<button type="submit" class="btn btn-primary">Submit</button>
+							</div>
+						</div>
+					</fieldset>
+				</form>
+				
+			</div>
+		</div>
+	</div>
+</div>

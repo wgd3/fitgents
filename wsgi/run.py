@@ -71,7 +71,10 @@ class FoodHistory(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
 	timestamp = db.Column(db.DateTime)
-	
+	calories = db.Column(db.Integer)
+	protein = db.Column(db.Integer)
+	fat = db.Column(db.Integer)
+	notes = db.Column(db.String(300))
 	
 class SleepHistory(db.Model):
 	__tablename__ = 'sleep_history'
@@ -246,27 +249,43 @@ def register():
 	return render_template("register.html")
 
 @app.route("/food")
-@app.route("/<user>/food")
+# TODO: Implement POST request for adding logs
 def food():
 	return render_template("food.html")
 
+@app.route("/food/new", methods=["POST"])
+def addfood():
+	# start by attempting to fill all variables
+	try:
+		logDate = request.form['inputDate']
+		logCalories = request.form['inputCalories']
+		logProtein = request.form['inputProtein']
+		logCarbohydrates = request.form['inputCarbohydrates']
+		logFat = request.form['inputFat']
+		logNotes = request.form['inputNotes']
+	except Exception as e:
+		print str(e)
+		flash("There was an error pulling information from the form.", "warning")
+		return redirect(url_for("food"))
+		
+	
+
 @app.route("/excercise")
-@app.route("/<user>/excercise")
+# TODO: Implement POST request for adding logs
 def excercise():
 	return render_template("excercise.html")
 
 @app.route("/sleep")
-@app.route("/<user>/sleep")
+# TODO: Implement POST request for adding logs
 def sleep():
 	return render_template("sleep.html")
 
 @app.route("/statistics")
-@app.route("/<user>/statistics")
 def statistics():
 	return render_template("statistics.html")
 
 @app.route("/profile")
-def profile(*args):
+def profile():
 	if "user_id" in session: # session token found
 		return render_template("profile.html")
 	else:

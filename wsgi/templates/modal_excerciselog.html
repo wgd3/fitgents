@@ -1,0 +1,160 @@
+<div class="modal" id="modal_excercise">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h4 class="modal-title">Add Excercise Data</h4>
+			</div>
+			
+			<div class="modal-body">
+				
+				<ul class="nav nav-pills nav-justified">
+					<li class="active"><a href="#form_cardio_tab" data-toggle="tab">Cardio</a></li>
+					<li><a href="#form_strength_tab" data-toggle="tab">Strength</a></li>
+				</ul>
+				
+				<div class="tab-content">
+					<div id="form_cardio_tab" class="tab-pane fade active in">
+						<br>
+						<form class="form-horizontal" id="form_cardio">
+							<fieldset>
+								
+								<div class="form-group">
+									<label for="inputDate" class="col-lg-2 control-label">Date</label>
+									<div class="col-lg-10">
+										<input class="form-control" id="inputDate" name="inputDate" placeholder="01/01/2014" type="date">
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label for="selectActivity" class="col-lg-2 control-label">Activity</label>
+									<div class="col-lg-10">
+										<select class="form-control" id="selectActivity">
+											<option>[Add New Activity]</option>
+											<option>2</option>
+										</select>
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label for="inputCalories" class="col-lg-2 control-label">Calories Burned</label>
+									<div class="col-lg-10">
+										<input class="form-control" id="inputCalories" name="inputCalories" type="number">
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label for="inputTime" class="col-lg-2 control-label">Time (minutes)</label>
+									<div class="col-lg-10">
+										<input class="form-control" id="inputTime" name="inputTime" type="number">
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label for="inputDistance" class="col-lg-2 control-label">Distance (miles)</label>
+									<div class="col-lg-10">
+										<input class="form-control" id="inputDistance" name="inputDistance" type="number">
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label for="inputNotes" class="col-lg-2 control-label">Notes</label>
+									<div class="col-lg-10">
+										<textarea class="form-control" rows="3" id="inputNotes" name="inputNotes"></textarea>
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<div class="col-lg-10 col-lg-offset-2">
+										<button class="btn btn-default">Cancel</button>
+										<button type="submit" class="btn btn-primary">Submit</button>
+									</div>
+								</div>
+							</fieldset>
+						</form>
+					</div>
+					
+					<div id="form_strength_tab" class="tab-pane fade">
+						<br>
+						<form class="form-horizontal" id="form_strength">
+							<fieldset>
+								
+								<div class="form-group">
+									<label for="inputDate" class="col-lg-2 control-label">Date</label>
+									<div class="col-lg-10">
+										<input class="form-control" id="inputDate" name="inputDate" placeholder="01/01/2014" type="date">
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<label for="selectActivity" class="col-lg-2 control-label">Activity</label>
+									<div class="col-lg-10">
+										<select class="form-control" id="selectActivity">
+											<option>[Add New Activity]</option>
+											<option>2</option>
+										</select>
+									</div>
+								</div>
+								
+								<table class="table table-striped">
+									<thead>
+										<tr>
+											<th class="col-md-2">Set #</th>
+											<th class="col-md-3">Reps</th>
+											<th class="col-md-3">Weight (lbs)</th>
+											<th class="col-md-3"></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>
+												<div class="pull-left">
+													<span class="badge">1</span>
+												</div>
+											</td>
+											<td>
+												<div class="form-group">
+													<div class="col-md-8">
+														<input class="form-control" id="inputSetWeight1" name="inputSetWeight1" type="number">
+													</div>
+												</div>
+											</td>
+											<td>
+												<div class="form-group">
+													<div class="col-md-8">
+														<input class="form-control" id="inputSetReps1" name="inputSetReps1" type="number">
+													</div>
+												</div>
+											</td>
+											<td>
+												<div class="pull-right">
+													<span class="glyphicon glyphicon-plus"></span>
+												</div>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+								
+								<div class="form-group">
+									<label for="inputNotes" class="col-lg-2 control-label">Notes</label>
+									<div class="col-lg-10">
+										<textarea class="form-control" rows="3" id="inputNotes" name="inputNotes"></textarea>
+									</div>
+								</div>
+								
+								<div class="form-group">
+									<div class="col-lg-10 col-lg-offset-2">
+										<button class="btn btn-default">Cancel</button>
+										<button type="submit" class="btn btn-primary">Submit</button>
+									</div>
+								</div>
+							</fieldset>
+						</form>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+</div>
