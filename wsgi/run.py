@@ -251,7 +251,25 @@ def register():
 @app.route("/food")
 # TODO: Implement POST request for adding logs
 def food():
-	return render_template("food.html")
+	if "user_id" in session:
+		try:
+			#foodLogCount = FoodHistory.query.filter_by(id=session['user_id']).count()
+			#if foodLogCount == 0:
+			#	print "Did not find any food logs for user with user_id %d" % session['user_id']
+			#	return render_template("food.html")
+			#else:
+			foodLogQuery = FoodHistory.query.filter_by(id=session['user_id'])
+			print "Successfully queried the db for food history"
+			g.user.foodlog = foodLogQuery
+				
+			return render_template("food.html")
+		except Exception as e:
+			print str(e)
+			flash("There was a problem grabbing the food log from the database.", "warning")
+			return redirect(url_for("food"))
+			
+	else:
+		return render_template("food.html")
 
 @app.route("/food/new", methods=["POST"])
 def addfood():
@@ -268,7 +286,27 @@ def addfood():
 		flash("There was an error pulling information from the form.", "warning")
 		return redirect(url_for("food"))
 		
-	
+	# set the timestamp if not already defined
+	if not logDate:
+		print "No date given in the form, adding manually"
+		logDate = datetime.date.today()
+		
+	logEntry = FoodHistory(user_id = session['user_id'],
+							calories = logCalories,
+							protein = logProtein,
+							fat = logFat,
+							timestamp = logDate,
+							notes = logNotes)
+	try:
+		db.session.add(logEntry)
+		db.session.commit()
+		
+		flash("Food log submitted successfully!", "success")
+		return redirect(url_for("food"))
+	except Exception as e:
+		print str(e)
+		flash("There was an error submitting the food log.", "warning")
+		return redirect(url_for("food"))
 
 @app.route("/excercise")
 # TODO: Implement POST request for adding logs
