@@ -253,16 +253,19 @@ def register():
 def food():
 	if "user_id" in session:
 		try:
-			#foodLogCount = FoodHistory.query.filter_by(id=session['user_id']).count()
-			#if foodLogCount == 0:
-			#	print "Did not find any food logs for user with user_id %d" % session['user_id']
-			#	return render_template("food.html")
-			#else:
-			foodLogQuery = FoodHistory.query.filter_by(id=session['user_id'])
-			print "Successfully queried the db for food history"
-			g.user.foodlog = foodLogQuery
+			foodLogCount = FoodHistory.query.filter_by(user_id=session['user_id']).count()
+			if foodLogCount == 0:
+				print "Did not find any food logs for user with user_id %d" % session['user_id']
+				return render_template("food.html")
 				
-			return render_template("food.html")
+			else:
+				foodLogQuery = FoodHistory.query.filter_by(user_id=session['user_id']).order_by(db.desc(FoodHistory.timestamp))
+				print "Successfully queried the db for food history and found %d records" % foodLogCount
+				
+				g.user.foodlog = foodLogQuery
+				
+				return render_template("food.html")
+				
 		except Exception as e:
 			print str(e)
 			flash("There was a problem grabbing the food log from the database.", "warning")
