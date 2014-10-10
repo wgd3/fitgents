@@ -30,12 +30,13 @@
 				var ctx = $("#foodChart").get(0).getContext("2d");
 				
 				// define the data for the chart
+				var revCalories = [{% for log in g.user.foodlog %}"{{ log.calories }}",{% endfor %}].reverse()
 				var data = {
-					labels: [{% for log in g.user.foodlog %}"{{ log.timestamp }}",{% endfor %}],
+					labels: [{% for log in g.user.foodlog %}"{{ log.timestamp }}",{% endfor %}].reverse(),
 					datasets: [
 						{
 							label: "Calories",
-							data: [{% for log in g.user.foodlog %}"{{ log.calories }}",{% endfor %}],
+							data: revCalories,
 							fillColor: "rgba(220,220,220,0.2)",
 							strokeColor: "rgba(220,220,220,1)",
 							pointColor: "rgba(220,220,220,1)",
@@ -45,15 +46,15 @@
 						},
 						{
 							label: "Protein",
-							data: [{% for log in g.user.foodlog %}"{{ log.protein }}",{% endfor %}]
+							data: [{% for log in g.user.foodlog %}"{{ log.protein }}",{% endfor %}].reverse()
 						},
 						{
 							label: "Carbs",
-							data: [{% for log in g.user.foodlog %}"{{ log.carbohydrates }}",{% endfor %}]
+							data: [{% for log in g.user.foodlog %}"{{ log.carbohydrates }}",{% endfor %}].reverse()
 						},
 						{
 							label: "Fat",
-							data: [{% for log in g.user.foodlog %}"{{ log.fat }}",{% endfor %}]
+							data: [{% for log in g.user.foodlog %}"{{ log.fat }}",{% endfor %}].reverse()
 						},
 					]
 				};
