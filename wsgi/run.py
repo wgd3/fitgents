@@ -1,4 +1,4 @@
-import os, datetime, sys
+import os, datetime, sys, csv
 from flask import Flask
 from flask import render_template
 from flask import request, session, redirect, flash, g, url_for
@@ -8,14 +8,19 @@ from random import SystemRandom
 from backports.pbkdf2 import pbkdf2_hmac, compare_digest
 from flask.ext.login import UserMixin
 from sqlalchemy.ext.hybrid import hybrid_property
+from werkzeug import secure_filename
 
+
+UPLOAD_FOLDER = '/path/to/the/uploads'
+ALLOWED_EXTENSIONS = set(['csv'])
 
 app = Flask(__name__)
 
 app.config.from_pyfile('fitgents.py')
+app.config['PROPAGATE_EXCEPTIONS'] = True
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 db = SQLAlchemy(app)
-#lm = LoginManager()
-#lm.init_app(app)
 
 ### Database table definitions ###
 
@@ -30,6 +35,7 @@ class User(db.Model):
 	excercise_history = db.relationship('ExcerciseHistory', backref='user', lazy='dynamic')
 	_password = db.Column(db.LargeBinary(120))
 	_salt = db.Column(db.String(120))
+	is_admin = db.Column(db.Boolean)
 
 	@hybrid_property
 	def password(self):
@@ -80,7 +86,11 @@ class SleepHistory(db.Model):
 	__tablename__ = 'sleep_history'
 	id = db.Column(db.Integer, primary_key=True)
 	user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
-	timestamp = db.Column(db.DateTime)
+	sleep_start = db.Column(db.DateTime)
+	sleep_end = db.Column(db.DateTime)
+	quality = db.Column(db.Float)
+	total_time = db.Column(db.Time)
+	wake_up_mood = db.Column(db.Text)
 	
 class ExcerciseHistory(db.Model):
 	__tablename__ = 'excercise_history'
@@ -125,6 +135,12 @@ def page_not_found(e):
 	flash("Error 500 - Internal Server Error", "danger")
 	print str(e)
 	return render_template('error.html')
+	
+@app.errorhandler(405)
+def page_not_found(e):
+	flash("Error 405 - Method not allowed", "danger")
+	error_content = "This usually occurs when an HTTP request is made on a URL that does not support the request type."
+	return render_template("error.html", error_content=error_content)
 
 ##############
 
@@ -217,14 +233,17 @@ def register():
 				
 				try:
 					findUsersQuery = User.query.all()
-					for user in findUserQuery:
+					for user in findUsersQuery:
 						if user.name == new_user_name:
+							print "Found existing username '%s' which matches the username entered on the form '%s'" % (user.name, new_user_name)
 							raise Exception
 						if user.email == new_user_email:
+							print "Found existing email '%s' which matches the email entered on the form '%s'" % (user.email, new_user_email)
 							raise Exception
 				except Exception as e:
+					print str(e)
 					flash("User name or email has already been taken.", "info")
-					return redirect(url_for("login"))
+					return redirect(url_for("register"))
 				
 				try:
 					entry = User(name = new_user_name, email = new_user_email, age = new_user_age, password=new_user_password)
@@ -320,6 +339,38 @@ def excercise():
 # TODO: Implement POST request for adding logs
 def sleep():
 	return render_template("sleep.html")
+	
+@app.route("/sleep/upload", methods=["POST"])
+def uploadSleep():
+	file = request.files['sleepcsv']
+	if file and allowed_file(file.filename):
+		#newFileName = file.filename + "_user" + str(session['user_id'])
+		#file.save(os.path.join(app.config['UPLOAD_FOLDER'], newFileName))
+		
+		#flash("Sleep log uploaded successfully as %s" % newFileName, "success")
+		
+		analyze_sleep_csv(file)
+		
+		return redirect(url_for("sleep"))
+	
+	else:
+		flash("No file upload detected, try again.", "warning")
+		return redirect(url_for('sleep'))
+	
+def allowed_file(filename):
+		return '.' in filename and \
+					 filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+					 
+def analyze_sleep_csv(sleep_log):
+	reader = csv.DictReader(sleep_log, delimiter=';')
+	for line in reader:
+		print "Reading line from sleep log, night of %s for %s hours" % (line['Start'], line['Time in bed'])
+		
+	return True
+
+@app.route("/body")
+def body():
+	return render_template("body.html")
 
 @app.route("/statistics")
 def statistics():

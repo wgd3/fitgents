@@ -6,7 +6,7 @@
 
 	<div class="page-header">
 		<h1>Sleep
-			<a href="#" class="btn btn-default pull-right">
+			<a href="#" class="btn btn-default pull-right" data-toggle="modal" data-target="#modal_sleep">
 				<span class="glyphicon glyphicon-plus"></span> Log New Data
 			</a>
 		</h1>
@@ -16,7 +16,21 @@
 
 <div class="row">
 
-	{% include 'statlog.html' %}
+	{% if g.user.name != "Guest" %}
+	
+		{% include 'modal_sleeplog.html' %}
+		
+		{% if g.user.sleeplog is defined %}
+		
+		
+		
+		{% else %}
+			<p>No sleep logs have been entered yet!</p>
+		{% endif %}
+	
+	{% else %}
+		<p>Hey, you're not logged in!</p>
+	{% endif %}
 
 </div>
 

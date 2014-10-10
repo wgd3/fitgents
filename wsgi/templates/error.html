@@ -9,7 +9,11 @@
 			<h2 class="panel-title">Oops, something went wrong!</h2>
 		</div>
 		<div class="panel-body">
-			The page you requested could not be found. You can probably blame Wallace for the this.
+			The page you requested could not be found. You can probably blame Wallace for this.
+			{% if error_content is defined %}
+				<hr>
+				{{ error_content }}
+			{% endif %}
 		</div>
 	</div>
 
