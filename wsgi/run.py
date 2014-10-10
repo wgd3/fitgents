@@ -338,7 +338,27 @@ def excercise():
 @app.route("/sleep")
 # TODO: Implement POST request for adding logs
 def sleep():
-	return render_template("sleep.html")
+	if "user_id" in session:
+		try:
+			sleepLogCount = SleepHistory.query.filter_by(user_id=session['user_id'])
+			if sleepLogCount == 0:
+				print "Did not find any sleep logs for user %s" % session['user_name']
+				
+				return render_template("sleep.html")
+				
+			else:
+				sleepLogQuery = SleepHistory.query.filter_by(user_id=session['user_id']).order_by(db.desc(SleepHistory.sleep_start))
+				print "Successfully queried the database for user %s's sleep log" % session['user_name']
+				
+				g.user.sleeplog = sleepLogQuery
+				
+				return render_template("sleep.html")
+		except Exception as e:
+			print str(e)
+			flash("There was a problem grabbing the sleep log from the database.", "warning")
+			return redirect(url_for("sleep"))
+	else:
+		return render_template("sleep.html")
 	
 @app.route("/sleep/upload", methods=["POST"])
 def uploadSleep():
@@ -365,6 +385,30 @@ def analyze_sleep_csv(sleep_log):
 	reader = csv.DictReader(sleep_log, delimiter=';')
 	for line in reader:
 		print "Reading line from sleep log, night of %s for %s hours" % (line['Start'], line['Time in bed'])
+		# convert quality to float
+		sleepQuality = float(line['Sleep quality'].replace('%',''))/100
+		sleepLog = SleepHistory(user_id = session['user_id'],
+								sleep_start = line['Start'],
+								sleep_end = line['End'], 
+								total_time = line['Time in bed'],
+								quality = sleepQuality,
+								wake_up_mood = line['Wake up'])
+		
+		try:
+			# attempt adding the log to the database
+			db.session.add(sleepLog)
+			print "Added another line to the database successfully!"
+		except Exception as e:
+			print str(e)
+			flash("There was an error submitting one of the lines from the CSV file to the database.", "warning")
+			return redirect(url_for("sleep"))
+	
+	try:
+		db.session.commit()
+	except Exception as e:
+		print str(e)
+		flash("Parsed CSV file could not be committed to the database.", "warning")
+		return redirect(url_for("sleep"))
 		
 	return True
 

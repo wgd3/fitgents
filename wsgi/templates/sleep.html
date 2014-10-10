@@ -22,7 +22,32 @@
 		
 		{% if g.user.sleeplog is defined %}
 		
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th class="col-md-2">Sleep Start</th>
+						<th class="col-md-2">Sleep End</th>
+						<th class="col-md-2">Total Time</th>
+						<th class="col-md-2">Quality</th>
+						<th class="col-md-3">Wake Up Mood</th>
+						<th class="col-md-1 text-right">Edit</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for log in g.user.sleeplog %}
+						<tr>
+							<td>{{ log.sleep_start }}</td>
+							<td>{{ log.sleep_end }}</td>
+							<td>{{ log.total_time }}</td>
+							<td>{{ log.quality }}</td>
+							<td>{{ log.wake_up_mood }}</td>
+							<td><span class="pull-right glyphicon glyphicon-pencil"></span></td>
+						</tr>
+					{% endfor %}
+				</tbody>
 		
+		
+			</table>
 		
 		{% else %}
 			<p>No sleep logs have been entered yet!</p>
