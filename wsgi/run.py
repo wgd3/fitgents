@@ -112,6 +112,8 @@ def load_user():
 		
 	g.user = user
 
+
+
 @app.errorhandler(404)
 def page_not_found(e):
 	flash("Error 404 - Page Not Found", "danger")
