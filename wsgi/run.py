@@ -80,6 +80,7 @@ class FoodHistory(db.Model):
 	calories = db.Column(db.Integer)
 	protein = db.Column(db.Integer)
 	fat = db.Column(db.Integer)
+	cheat_day = db.Column(db.Boolean)
 	notes = db.Column(db.String(300))
 	
 class SleepHistory(db.Model):
@@ -91,7 +92,21 @@ class SleepHistory(db.Model):
 	quality = db.Column(db.Float)
 	total_time = db.Column(db.Time)
 	wake_up_mood = db.Column(db.Text)
-	
+
+class BodyHistory(db.Model):
+	__tablename__ = 'body_history'
+	id = db.Column(db.Integer, primary_key=True)
+	user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+	timestamp = db.Column(db.Date)
+	weight = db.Column(db.Float)
+	bodyfat = db.Column(db.Float)
+	lean_muscle = db.Column(db.Float)
+	circ_chest = db.Column(db.Float)
+	circ_waist = db.Column(db.Float)
+	circ_thigh = db.Column(db.Float)
+	circ_neck = db.Column(db.Float)
+	circ_upperarm = db.Column(db.Float)
+
 class ExcerciseHistory(db.Model):
 	__tablename__ = 'excercise_history'
 	id = db.Column(db.Integer, primary_key=True)

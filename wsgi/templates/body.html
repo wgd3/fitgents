@@ -6,7 +6,7 @@
 
 	<div class="page-header">
 		<h1>Body
-			<a href="#" class="btn btn-default pull-right">
+			<a href="#" class="btn btn-default pull-right" data-toggle="modal" data-target="#modal_body">
 				<span class="glyphicon glyphicon-plus"></span> Log New Data
 			</a>
 		</h1>
@@ -16,8 +16,48 @@
 
 <div class="row">
 
-	{% include 'statlog.html' %}
+	{% if g.user.name != "Guest" %}
+	
+		{% include 'modal_bodylog.html' %}
+		
+		{% if g.user.bodylog is defined %}
+		
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th class="col-md-2">Date</th>
+						<th class="col-md-2">Weight</th>
+						<th class="col-md-2">Body Fat</th>
+						<th class="col-md-2">Lean Muscle</th>
+						<th class="col-md-3"></th>
+						<th class="col-md-1 text-right">Edit</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for log in g.user.bodylog %}
+						<tr>
+							<td>{{ log.timestamp }}</td>
+							<td>{{ log.weight }}</td>
+							<td>{{ log.bodyfat }}</td>
+							<td>{{ log.lean_muscle }}</td>
+							<td></td>
+							<td><span class="pull-right glyphicon glyphicon-pencil"></span></td>
+						</tr>
+					{% endfor %}
+				</tbody>
+		
+		
+			</table>
+		
+		{% else %}
+			<p>No body logs have been entered yet!</p>
+		{% endif %}
+	
+	{% else %}
+		<p>Hey, you're not logged in!</p>
+	{% endif %}
 
 </div>
+
 
 {% endblock %}

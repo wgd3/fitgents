@@ -1,0 +1,138 @@
+<div class="modal" id="modal_body">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h4 class="modal-title">Add Body Data</h4>
+			</div>
+			
+			<div class="modal-body">
+				
+				<form class="form-horizontal" method="post" action="/food/new">
+					<fieldset>
+						
+						<div class="form-group">
+							<label for="inputDate" class="col-lg-2 control-label">Date*</label>
+							<div class="col-lg-10">
+								<input class="form-control" id="inputDate" name="inputDate" placeholder="01/01/2014" type="date">
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label for="inputCalories" class="col-lg-2 control-label">Weight*</label>
+							<div class="col-lg-10">
+								<input class="form-control" id="inputCalories" name="inputCalories" type="number">
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label for="inputProtein" class="col-lg-2 control-label">Body Fat*</label>
+							<div class="col-lg-10">
+								<input class="form-control" id="inputProtein" name="inputProtein" type="text">
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<!--TODO add dynamic updates to this field via jQuery -->
+							<label for="inputProtein" class="col-lg-2 control-label">Lean Muscle</label>
+							<div class="col-lg-10">
+								<input class="form-control" id="inputProtein" name="inputProtein" type="text" disabled>
+							</div>
+						</div>
+						
+						<h3 class="col-md-12 pull-left">Circumferences</h3>
+						
+						<div class="form-group">
+							<label for="inputFat" class="col-lg-2 control-label">Chest</label>
+							<div class="col-lg-10">
+								<input class="form-control" id="inputFat" name="inputFat" type="text">
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label for="inputFat" class="col-lg-2 control-label">Waist</label>
+							<div class="col-lg-10">
+								<input class="form-control" id="inputFat" name="inputFat" type="text">
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label for="inputFat" class="col-lg-2 control-label">Thigh</label>
+							<div class="col-lg-10">
+								<input class="form-control" id="inputFat" name="inputFat" type="text">
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label for="inputFat" class="col-lg-2 control-label">Neck</label>
+							<div class="col-lg-10">
+								<input class="form-control" id="inputFat" name="inputFat" type="text">
+							</div>
+						</div>
+						
+						<h3 class="col-md-12">Fat Caliper Measurements (mm)</h3>
+						
+						<div class="form-group">
+							<label for="inputCalories" class="col-lg-2 control-label">Chest</label>
+							<div class="col-lg-10">
+								<input class="form-control" id="inputCalories" name="inputCalories" type="number">
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label for="inputCalories" class="col-lg-2 control-label">Abdominal</label>
+							<div class="col-lg-10">
+								<input class="form-control" id="inputCalories" name="inputCalories" type="number">
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label for="inputCalories" class="col-lg-2 control-label">Thigh</label>
+							<div class="col-lg-10">
+								<input class="form-control" id="inputCalories" name="inputCalories" type="number">
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label for="inputCalories" class="col-lg-2 control-label">Tricep</label>
+							<div class="col-lg-10">
+								<input class="form-control" id="inputCalories" name="inputCalories" type="number">
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label for="inputCalories" class="col-lg-2 control-label">Subscapular</label>
+							<div class="col-lg-10">
+								<input class="form-control" id="inputCalories" name="inputCalories" type="number">
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label for="inputCalories" class="col-lg-2 control-label">Suprailiac</label>
+							<div class="col-lg-10">
+								<input class="form-control" id="inputCalories" name="inputCalories" type="number">
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label for="inputCalories" class="col-lg-2 control-label">Midaxillary</label>
+							<div class="col-lg-10">
+								<input class="form-control" id="inputCalories" name="inputCalories" type="number">
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<div class="col-lg-10 col-lg-offset-2">
+								<button class="btn btn-default">Cancel</button>
+								<button type="submit" class="btn btn-primary">Submit</button>
+							</div>
+						</div>
+					</fieldset>
+				</form>
+				
+			</div>
+		</div>
+	</div>
+</div>
+
