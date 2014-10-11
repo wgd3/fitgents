@@ -84,8 +84,12 @@ class FoodHistory(db.Model):
 	calories = db.Column(db.Integer)
 	protein = db.Column(db.Integer)
 	fat = db.Column(db.Integer)
+	carbohydrates = db.Column(db.Integer)
 	cheat_day = db.Column(db.Boolean)
 	notes = db.Column(db.String(300))
+	
+	def __repr__(self):
+		return '<User %s consumed %d calories on %s and cheat_day is set to %s>' % (self.user_id, self.calories, self.timestamp, self.cheat_day)
 	
 class SleepHistory(db.Model):
 	__tablename__ = 'sleep_history'
@@ -94,7 +98,7 @@ class SleepHistory(db.Model):
 	sleep_start = db.Column(db.DateTime)
 	sleep_end = db.Column(db.DateTime)
 	quality = db.Column(db.Float)
-	total_time = db.Column(db.Time)
+	total_time = db.Column(db.Date)
 	wake_up_mood = db.Column(db.Text)
 
 class BodyHistory(db.Model):
@@ -312,6 +316,9 @@ def food():
 				foodLogQuery = FoodHistory.query.filter_by(user_id=session['user_id']).order_by(db.desc(FoodHistory.timestamp))
 				print "Successfully queried the db for food history and found %d records" % foodLogCount
 				
+				for log in foodLogQuery:
+					print str(log)
+				
 				g.user.foodlog = foodLogQuery
 				
 				return render_template("food.html")
@@ -334,6 +341,7 @@ def addfood():
 		logCarbohydrates = request.form['inputCarbohydrates']
 		logFat = request.form['inputFat']
 		logNotes = request.form['inputNotes']
+		logCheatDay = request.form['inputCheatDay']
 	except Exception as e:
 		print str(e)
 		flash("There was an error pulling information from the form.", "warning")
@@ -348,7 +356,9 @@ def addfood():
 							calories = logCalories,
 							protein = logProtein,
 							fat = logFat,
+							carbohydrates = logCarbohydrates,
 							timestamp = logDate,
+							cheat_day = logCheatDay,
 							notes = logNotes)
 	try:
 		db.session.add(logEntry)
@@ -416,12 +426,16 @@ def analyze_sleep_csv(sleep_log):
 	reader = csv.DictReader(sleep_log, delimiter=';')
 	for line in reader:
 		print "Reading line from sleep log, night of %s for %s hours" % (line['Start'], line['Time in bed'])
+		
 		# convert quality to float
+		sleepInMinutes = int(line['Time in bed'].split(':')[0])*60 + int(line['Time in bed'].split(':')[1])
 		sleepQuality = float(line['Sleep quality'].replace('%',''))/100
+		print "User slept for %d minutes with a %d quality rating on %s" % (sleepInMinutes, sleepQuality, line['Start'])
+		
 		sleepLog = SleepHistory(user_id = session['user_id'],
 								sleep_start = line['Start'],
 								sleep_end = line['End'], 
-								total_time = line['Time in bed'],
+								total_time = sleepInMinutes,
 								quality = sleepQuality,
 								wake_up_mood = line['Wake up'])
 		

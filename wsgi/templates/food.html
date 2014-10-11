@@ -44,18 +44,6 @@
 							pointHighlightFill: "#fff",
 							pointHighlightStroke: "rgba(220,220,220,1)",
 						},
-						{
-							label: "Protein",
-							data: [{% for log in g.user.foodlog %}"{{ log.protein }}",{% endfor %}].reverse()
-						},
-						{
-							label: "Carbs",
-							data: [{% for log in g.user.foodlog %}"{{ log.carbohydrates }}",{% endfor %}].reverse()
-						},
-						{
-							label: "Fat",
-							data: [{% for log in g.user.foodlog %}"{{ log.fat }}",{% endfor %}].reverse()
-						},
 					]
 				};
 				var options = {
@@ -112,7 +100,7 @@
 					height: 400,
 				});
 				var foodChart = new Chart(ctx).Line(data, options);
-			
+							
 			</script>
 		
 			<table class="table table-striped">
@@ -120,9 +108,11 @@
 					<tr>
 						<th class="col-md-2">Date</th>
 						<th class="col-md-2">Calories</th>
-						<th class="col-md-2">Protein</th>
-						<th class="col-md-2">Fat</th>
-						<th class="col-md-3">Notes</th>
+						<th class="col-md-1">Protein</th>
+						<th class="col-md-1">Fat</th>
+						<th class="col-md-1">Carbs</th>
+						<th class="col-md-2">Cheat Day</th>
+						<th class="col-md-2">Notes</th>
 						<th class="col-md-1 text-right">Edit</th>
 					</tr>
 				</thead>
@@ -133,6 +123,8 @@
 							<td>{{ log.calories }}</td>
 							<td>{{ log.protein }}</td>
 							<td>{{ log.fat }}</td>
+							<td>{{ log.carbohydrates }}</td>
+							<td>{% if log.cheat_day %}<span class="glyphicon glyphicon-ok"></span>{% endif %}
 							<td>{{ log.notes }}</td>
 							<td><span class="pull-right glyphicon glyphicon-pencil"></span></td>
 						</tr>
