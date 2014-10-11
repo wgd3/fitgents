@@ -37,6 +37,9 @@ class User(db.Model):
 	_password = db.Column(db.LargeBinary(120))
 	_salt = db.Column(db.String(120))
 	is_admin = db.Column(db.Boolean)
+	goal_weight = db.Column(db.Float)
+	goal_bodyfat = db.Column(db.Float)
+	sign_up_date = db.Column(db.Date)
 
 	@hybrid_property
 	def password(self):
@@ -271,13 +274,16 @@ def register():
 					return redirect(url_for("register"))
 				
 				try:
-					entry = User(name = new_user_name, email = new_user_email, age = new_user_age, password=new_user_password)
+					entry = User(name = new_user_name, email = new_user_email, age = new_user_age, password=new_user_password, goal_weight = 0, goal_bodyfat = 0)
 					
 					db.session.add(entry)
 					db.session.commit()
 					
+					newUser = User.query.filter_by(email=new_user_email).first()
+					session['user_id'] = newUser.id
+					
 					flash("User registration for %s was successful!" % new_user_name, "success")
-					return render_template("dashboard.html")
+					return redirect(url_for("profile"))
 					
 				except Exception as e:
 					print str(e)
@@ -535,11 +541,88 @@ def statistics():
 @app.route("/profile")
 def profile():
 	if "user_id" in session: # session token found
-		print str(g.user.food_history)
+		print "Goal Weight: " +str(g.user.goal_weight)
+		print "Goal BodyFat: " +str(g.user.goal_bodyfat)
 		
 		return render_template("profile.html")
 	else:
 		flash("Must be logged in to view profiles.", "info")
+		return redirect(url_for("index"))
+		
+@app.route("/profile/goal_weight", methods = ["POST"])
+def updateGoalWeight():
+	if "user_id" in session:
+		print "Attempting to update the goal weight for user %s" % g.user.name
+		
+		if request.form['inputGoalWeight']:
+			try:
+				goalUser = User.query.filter_by(email=session['user_email']).first()
+				goalUser.goal_weight = request.form['inputGoalWeight']
+				
+				db.session.commit()
+				flash("Goal weight updated successfully", "success")
+				return redirect(url_for("profile"))
+			except Exception as e:
+				print str(e)
+				flash("There was an error updating your goal weight", "warning")
+				return redirect(url_for("profile"))
+		else:
+			flash("No new goal weight entered, try again.", "warning")
+			return redirect(url_for("profile"))
+		
+	else:
+		flash("You must be logged in to view this page.", "warning")
+		return redirect(url_for("index"))
+		
+@app.route("/profile/goal_bodyfat", methods = ["POST"])
+def updateGoalBodyFat():
+	if "user_id" in session:
+		print "Attempting to update the goal body fat for user %s" % g.user.name
+		
+		if request.form['inputGoalBodyFat']:
+			print "Updating goal body fat to %s" % request.form['inputGoalBodyFat']
+			try:
+				goalUser = User.query.filter_by(email=session['user_email']).first()
+				goalUser.goal_bodyfat = request.form['inputGoalBodyFat']
+				
+				db.session.commit()
+				flash("Goal body fat updated successfully", "success")
+				return redirect(url_for("profile"))
+				
+			except Exception as e:
+				print str(e)
+				flash("There was an error updating your goal body fat", "warning")
+				return redirect(url_for("profile"))
+		else:
+			flash("No new goal body fat entered, try again.", "warning")
+			return redirect(url_for("profile"))
+		
+	else:
+		flash("You must be logged in to view this page.", "warning")
+		return redirect(url_for("index"))
+		
+@app.route("/profile/update/<detail>", methods = ["POST"])
+def updateProfile(detail):
+	if "user_id" in session:
+		updatedUser = User.query.filter_by(id=session['user_id']).first()
+		if detail == "name":
+			updatedUser.name = request.form['inputName']
+		elif detail == "email":
+			updatedUser.email = request.form['inputEmail']
+		else:
+			flash("Sorry, you can not update your profile that way yet.", "warning")
+			return redirect(url_for("profile"))
+		
+		try:
+			db.session.commit()
+			return redirect(url_for("profile"))
+			
+		except Exception as e:
+			print str(e)
+			flash("There was an error updating your profile.", "warning")
+			return redirect(url_for("profile"))		
+	else:
+		flash("You must be logged in to update your profile.", "warning")
 		return redirect(url_for("index"))
 
 if __name__ == "__main__":

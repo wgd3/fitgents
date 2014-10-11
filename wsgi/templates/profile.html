@@ -5,7 +5,12 @@
 <div class="row">
 
 	<div class="page-header">
-		<h1>{{ g.user.name }} <small>Profile</small></h1>
+		<h1>{{ g.user.name }}
+			<small>
+				Profile
+			</small>
+			<p class="pull-right"><small>Member Since: {{ g.user.sign_up_date }}</small></p>
+		</h1>
 	</div>
 
 </div>
@@ -14,38 +19,202 @@
 
 	<div class="col-md-3">
 	
-		<div class="panel panel-primary">
-		
-			<div class="panel-heading">
-				<h2 class="panel-title">Current Stats</h2>
-			</div>
-		
-			<div class="panel-body">
-				<table class="table table-condensed text-right">
-					<tbody>
-						<tr>
-							<th>155</th>
-						</tr>
-						<tr>
-							<td>pounds</td>
-						</tr>
-						<tr>
-							<th>20%</th>
-						</tr>
-						<tr>
-							<td>body fat</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		
-		</div>
-	
+		<ul class="nav nav-pills nav-stacked">
+			<li class="active"><a href="#tab_general" data-toggle="tab">General</a></li>
+			<li><a href="#tab_goals" data-toggle="tab">Goals</a></li>
+			<li><a href="#tab_password" data-toggle="tab">Password</a></li>
+		</ul>
 	
 	</div>
 	
 	<div class="col-md-9">
 	
+		<div class="tab-content">
+		
+			<div class="tab-pane active fade in" id="tab_general">
+			
+				<div class="panel panel-primary">
+					<div class="panel-heading">
+						<h4 class="panel-title">Name</h4>
+					</div>
+					<div class="panel-body">
+						<p>{{ g.user.name }}
+							<a href="#" class="btn btn-primary pull-right" data-toggle="modal" data-target="#modal_updatename">Update</a>
+						</p>
+					</div>
+				</div>
+			
+				<div class="panel panel-primary">
+					<div class="panel-heading">
+						<h4 class="panel-title">Email</h4>
+					</div>
+					<div class="panel-body">
+						<p>{{ g.user.email }}
+							<a href="#" class="btn btn-primary pull-right" data-toggle="modal" data-target="#modal_updateemail">Update</a>
+						</p>
+					</div>
+				</div>
+			
+			</div>
+			
+			<div class="tab-pane fade" id="tab_goals">
+			
+				<div class="row">
+				{% if g.user.goal_weight != 0.0 %}
+					<div class="well">
+						<p>Current Weight Goal: {{ g.user.goal_weight }}lbs
+							<a href="#" data-toggle="modal" data-target="#modal_goalweight" class="btn btn-primary pull-right">Update Goal</a>
+						</p>
+					</div>
+				{% else %}
+					<div class="jumbotron" style="padding-top: 20px; padding-bottom: 20px;">
+						<h3>Weight</h3>
+						<p>Set your goal weight here! <a href="#" data-toggle="modal" data-target="#modal_goalweight" class="btn btn-primary pull-right">Set Goal</a></p>
+					</div>
+				{% endif %}
+				</div>
+				
+				<div class="row">
+				{% if g.user.goal_bodyfat != 0.0 %}
+					<div class="well">
+						<p>Current Body Fat Goal: {{ g.user.goal_bodyfat }}%
+							<a href="#" data-toggle="modal" data-target="#modal_goalbodyfat" class="btn btn-primary pull-right">Update Goal</a>
+						</p>
+					</div>
+				{% else %}
+					<div class="jumbotron" style="padding-top: 20px; padding-bottom: 20px;">
+						<h3>Body Fat</h3>
+						<p>Set your goal body fat here! <a href="#" data-toggle="modal" data-target="#modal_goalbodyfat" class="btn btn-primary pull-right">Set Goal</a></p>
+					</div>
+				{% endif %}
+				</div>
+			
+			</div>
+			
+			<div class="tab-pane fade" id="tab_password">
+			
+			</div>
+		
+		</div>
+	
+	</div>
+	
+	<div class="modal" id="modal_goalweight">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+					<h4 class="modal-title">Update Goal Weight</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal" method="post" action="/profile/goal_weight">
+						<fieldset>
+							<div class="form-group">
+								<label for="inputGoalWeight" class="col-md-4 control-label">New Weight Goal</label>
+								<div class="col-md-3 input-group">
+									<input type="text" class="form-control" id="inputGoalWeight" name="inputGoalWeight" placeholder="weight">
+									<span class="input-group-addon">lbs</span>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-lg-10 col-lg-offset-2">
+									<button class="btn btn-default">Cancel</button>
+									<button type="submit" class="btn btn-primary">Submit</button>
+								</div>
+							</div>
+						</fieldset>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal" id="modal_goalbodyfat">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+					<h4 class="modal-title">Update Goal Body Fat</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal" method="post" action="/profile/goal_bodyfat">
+						<fieldset>
+							<div class="form-group">
+								<label for="inputGoalBodyFat" class="col-md-4 control-label">New Body Fat Goal</label>
+								<div class="col-md-3 input-group">
+									<input type="text" class="form-control" id="inputGoalBodyFat" name="inputGoalBodyFat" placeholder="body fat">
+									<span class="input-group-addon">%</span>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-lg-10 col-lg-offset-2">
+									<button class="btn btn-default">Cancel</button>
+									<button type="submit" class="btn btn-primary">Submit</button>
+								</div>
+							</div>
+						</fieldset>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal" id="modal_updatename">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+					<h4 class="modal-title">Update Your Name</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal" method="post" action="/profile/update/name">
+						<fieldset>
+							<div class="form-group">
+								<label for="inputName" class="col-md-4 control-label">Name</label>
+								<div class="col-md-3 input-group">
+									<input type="text" class="form-control" id="inputName" name="inputName" placeholder="{{ g.user.name }}">
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-lg-10 col-lg-offset-2">
+									<button class="btn btn-default">Cancel</button>
+									<button type="submit" class="btn btn-primary">Submit</button>
+								</div>
+							</div>
+						</fieldset>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="modal" id="modal_updateemail">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+					<h4 class="modal-title">Update Your Email</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal" method="post" action="/profile/update/email">
+						<fieldset>
+							<div class="form-group">
+								<label for="inputEmail" class="col-md-4 control-label">Email</label>
+								<div class="col-md-5 input-group">
+									<input type="text" class="form-control" id="inputEmail" name="inputEmail" placeholder="{{ g.user.email }}">
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-lg-10 col-lg-offset-2">
+									<button class="btn btn-default">Cancel</button>
+									<button type="submit" class="btn btn-primary">Submit</button>
+								</div>
+							</div>
+						</fieldset>
+					</form>
+				</div>
+			</div>
+		</div>
 	</div>
 
 </div>
