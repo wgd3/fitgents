@@ -9,7 +9,7 @@
 			
 			<div class="modal-body">
 				
-				<form class="form-horizontal" method="post" action="/food/new">
+				<form class="form-horizontal" method="post" action="/body/new">
 					<fieldset>
 						
 						<div class="form-group">
@@ -20,105 +20,112 @@
 						</div>
 						
 						<div class="form-group">
-							<label for="inputCalories" class="col-lg-2 control-label">Weight*</label>
+							<label for="inputWeight" class="col-lg-2 control-label">Weight*</label>
 							<div class="col-lg-10">
-								<input class="form-control" id="inputCalories" name="inputCalories" type="number">
+								<input class="form-control" id="inputWeight" name="inputWeight" type="text">
 							</div>
 						</div>
 						
 						<div class="form-group">
-							<label for="inputProtein" class="col-lg-2 control-label">Body Fat*</label>
+							<label for="inputBodyFat" class="col-lg-2 control-label">Body Fat*</label>
 							<div class="col-lg-10">
-								<input class="form-control" id="inputProtein" name="inputProtein" type="text">
+								<input class="form-control" id="inputBodyFat" name="inputBodyFat" type="text">
 							</div>
 						</div>
 						
 						<div class="form-group">
 							<!--TODO add dynamic updates to this field via jQuery -->
-							<label for="inputProtein" class="col-lg-2 control-label">Lean Muscle</label>
+							<label for="inputLeanMuscle" class="col-lg-2 control-label">Lean Muscle</label>
 							<div class="col-lg-10">
-								<input class="form-control" id="inputProtein" name="inputProtein" type="text" disabled>
+								<input class="form-control" id="inputLeanMuscle" name="inputLeanMuscle" type="text">
 							</div>
 						</div>
 						
 						<h3 class="col-md-12 pull-left">Circumferences</h3>
 						
 						<div class="form-group">
-							<label for="inputFat" class="col-lg-2 control-label">Chest</label>
+							<label for="inputCircChest" class="col-lg-2 control-label">Chest</label>
 							<div class="col-lg-10">
-								<input class="form-control" id="inputFat" name="inputFat" type="text">
+								<input class="form-control" id="inputCircChest" name="inputCircChest" type="text">
 							</div>
 						</div>
 						
 						<div class="form-group">
-							<label for="inputFat" class="col-lg-2 control-label">Waist</label>
+							<label for="inputCircWaist" class="col-lg-2 control-label">Waist</label>
 							<div class="col-lg-10">
-								<input class="form-control" id="inputFat" name="inputFat" type="text">
+								<input class="form-control" id="inputCircWaist" name="inputCircWaist" type="text">
 							</div>
 						</div>
 						
 						<div class="form-group">
-							<label for="inputFat" class="col-lg-2 control-label">Thigh</label>
+							<label for="inputCircThigh" class="col-lg-2 control-label">Thigh</label>
 							<div class="col-lg-10">
-								<input class="form-control" id="inputFat" name="inputFat" type="text">
+								<input class="form-control" id="inputCircThight" name="inputCircThigh" type="text">
 							</div>
 						</div>
 						
 						<div class="form-group">
-							<label for="inputFat" class="col-lg-2 control-label">Neck</label>
+							<label for="inputCircNeck" class="col-lg-2 control-label">Neck</label>
 							<div class="col-lg-10">
-								<input class="form-control" id="inputFat" name="inputFat" type="text">
+								<input class="form-control" id="inputCircNeck" name="inputCircNeck" type="text">
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<label for="inputCircArm" class="col-lg-2 control-label">Upper Arm</label>
+							<div class="col-lg-10">
+								<input class="form-control" id="inputCircArm" name="inputCircArm" type="text">
 							</div>
 						</div>
 						
 						<h3 class="col-md-12">Fat Caliper Measurements (mm)</h3>
 						
 						<div class="form-group">
-							<label for="inputCalories" class="col-lg-2 control-label">Chest</label>
+							<label for="inputFatChest" class="col-lg-2 control-label">Chest</label>
 							<div class="col-lg-10">
-								<input class="form-control" id="inputCalories" name="inputCalories" type="number">
+								<input class="form-control" id="inputFatChest" name="inputFatChest" type="number">
 							</div>
 						</div>
 						
 						<div class="form-group">
-							<label for="inputCalories" class="col-lg-2 control-label">Abdominal</label>
+							<label for="inputFatAbdominal" class="col-lg-2 control-label">Abdominal</label>
 							<div class="col-lg-10">
-								<input class="form-control" id="inputCalories" name="inputCalories" type="number">
+								<input class="form-control" id="inputFatAbdominal" name="inputFatAbdominal" type="number">
 							</div>
 						</div>
 						
 						<div class="form-group">
-							<label for="inputCalories" class="col-lg-2 control-label">Thigh</label>
+							<label for="inputFatThigh" class="col-lg-2 control-label">Thigh</label>
 							<div class="col-lg-10">
-								<input class="form-control" id="inputCalories" name="inputCalories" type="number">
+								<input class="form-control" id="inputFatThigh" name="inputFatThigh" type="number">
 							</div>
 						</div>
 						
 						<div class="form-group">
-							<label for="inputCalories" class="col-lg-2 control-label">Tricep</label>
+							<label for="inputFatTricep" class="col-lg-2 control-label">Tricep</label>
 							<div class="col-lg-10">
-								<input class="form-control" id="inputCalories" name="inputCalories" type="number">
+								<input class="form-control" id="inputFatTricep" name="inputFatTricep" type="number">
 							</div>
 						</div>
 						
 						<div class="form-group">
-							<label for="inputCalories" class="col-lg-2 control-label">Subscapular</label>
+							<label for="inputFatSubscapular" class="col-lg-2 control-label">Subscapular</label>
 							<div class="col-lg-10">
-								<input class="form-control" id="inputCalories" name="inputCalories" type="number">
+								<input class="form-control" id="iinputFatSubscapular" name="inputFatSubscapular" type="number">
 							</div>
 						</div>
 						
 						<div class="form-group">
-							<label for="inputCalories" class="col-lg-2 control-label">Suprailiac</label>
+							<label for="inputFatSuprailiac" class="col-lg-2 control-label">Suprailiac</label>
 							<div class="col-lg-10">
-								<input class="form-control" id="inputCalories" name="inputCalories" type="number">
+								<input class="form-control" id="inputFatSuprailiac" name="inputFatSuprailiac" type="number">
 							</div>
 						</div>
 						
 						<div class="form-group">
-							<label for="inputCalories" class="col-lg-2 control-label">Midaxillary</label>
+							<label for="inputFatMidaxillary" class="col-lg-2 control-label">Midaxillary</label>
 							<div class="col-lg-10">
-								<input class="form-control" id="inputCalories" name="inputCalories" type="number">
+								<input class="form-control" id="inputFatMidaxillary" name="inputFatMidaxillary" type="number">
 							</div>
 						</div>
 						

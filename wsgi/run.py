@@ -33,6 +33,7 @@ class User(db.Model):
 	food_history = db.relationship('FoodHistory', backref='user', lazy='dynamic')
 	sleep_history = db.relationship('SleepHistory', backref='user', lazy='dynamic')
 	excercise_history = db.relationship('ExcerciseHistory', backref='user', lazy='dynamic')
+	body_history = db.relationship('BodyHistory', backref='user', lazy='dynamic')
 	_password = db.Column(db.LargeBinary(120))
 	_salt = db.Column(db.String(120))
 	is_admin = db.Column(db.Boolean)
@@ -101,11 +102,18 @@ class BodyHistory(db.Model):
 	weight = db.Column(db.Float)
 	bodyfat = db.Column(db.Float)
 	lean_muscle = db.Column(db.Float)
-	circ_chest = db.Column(db.Float)
-	circ_waist = db.Column(db.Float)
-	circ_thigh = db.Column(db.Float)
-	circ_neck = db.Column(db.Float)
-	circ_upperarm = db.Column(db.Float)
+	circ_chest = db.Column(db.Float, nullable=True)
+	circ_waist = db.Column(db.Float, nullable=True)
+	circ_thigh = db.Column(db.Float, nullable=True)
+	circ_neck = db.Column(db.Float, nullable=True)
+	circ_upperarm = db.Column(db.Float, nullable=True)
+	fat_chest = db.Column(db.Integer, nullable=True)
+	fat_abdominal = db.Column(db.Integer, nullable=True)
+	fat_thigh = db.Column(db.Integer, nullable=True)
+	fat_tricep = db.Column(db.Integer, nullable=True)
+	fat_subscapular = db.Column(db.Integer, nullable=True)	
+	fat_suprailiac = db.Column(db.Integer, nullable=True)
+	fat_midaxillary = db.Column(db.Integer, nullable=True)
 
 class ExcerciseHistory(db.Model):
 	__tablename__ = 'excercise_history'
@@ -431,7 +439,94 @@ def analyze_sleep_csv(sleep_log):
 
 @app.route("/body")
 def body():
-	return render_template("body.html")
+	if "user_id" in session:
+		try:
+			user = User.query.get(session['user_id'])
+			g.user.bodylog = user.body_history.order_by(db.asc(BodyHistory.timestamp))
+			
+			return render_template("body.html")
+		except Exception as e:
+			print str(e)
+			flash("There was a problem grabbing the body logs from the database.", "warning")
+			return redirect(url_for("body"))
+	else:
+		return render_template("body.html")
+		
+@app.route("/body/new", methods = ["POST"])
+def addbodylog():
+	if "user_id" in session:
+
+		# make sure all the fields have been filled out	
+		timestamp = request.form['inputDate']
+		weight = request.form['inputWeight']
+		bodyfat = request.form['inputBodyFat']
+		lean_muscle = request.form['inputLeanMuscle']
+		circ_chest = request.form['inputCircChest']
+		circ_waist = request.form['inputCircWaist']
+		circ_thigh = request.form['inputCircThigh']
+		circ_neck = request.form['inputCircNeck']
+		circ_upperarm = request.form['inputCircArm']
+		fat_chest = request.form['inputFatChest']
+		fat_abdominal = request.form['inputFatAbdominal']
+		fat_thigh = request.form['inputFatThigh']
+		fat_tricep = request.form['inputFatTricep']
+		fat_subscapular = request.form['inputFatSubscapular']
+		fat_suprailiac = request.form['inputFatSuprailiac']
+		fat_midaxillary = request.form['inputFatMidaxillary']
+		
+		if not timestamp or \
+			not weight or \
+			not bodyfat or \
+			not lean_muscle or \
+			not circ_chest or \
+			not circ_waist or \
+			not circ_thigh or \
+			not circ_neck or \
+			not circ_upperarm or \
+			not fat_chest or \
+			not fat_abdominal or \
+			not fat_thigh or \
+			not fat_tricep or \
+			not fat_subscapular or \
+			not fat_suprailiac or \
+			not fat_midaxillary:
+			flash("All fields required for body log.", "warning")
+			return redirect(url_for("body"))
+				
+		newEntry = BodyHistory(user_id=session['user_id'],
+								timestamp = request.form['inputDate'],
+								weight = request.form['inputWeight'],
+								bodyfat = request.form['inputBodyFat'],
+								lean_muscle = request.form['inputLeanMuscle'],
+								circ_chest = request.form['inputCircChest'],
+								circ_waist = request.form['inputCircWaist'],
+								circ_thigh = request.form['inputCircThigh'],
+								circ_neck = request.form['inputCircNeck'],
+								circ_upperarm = request.form['inputCircArm'],
+								fat_chest = request.form['inputFatChest'],
+								fat_abdominal = request.form['inputFatAbdominal'],
+								fat_thigh = request.form['inputFatThigh'],
+								fat_tricep = request.form['inputFatTricep'],
+								fat_subscapular = request.form['inputFatSubscapular'],
+								fat_suprailiac = request.form['inputFatSuprailiac'],
+								fat_midaxillary = request.form['inputFatMidaxillary'])
+		try:
+			db.session.add(newEntry)
+			print "Added the body log for %s, committing to database.." % request.form['inputDate']
+			
+			db.session.commit()
+			print "Successfully committed body log to the database"
+			
+			return redirect(url_for("body"))
+			
+		except Exception as e:
+			print str(e)
+			flash("There was a problem submitting the body log to the database.", "warning")
+			
+			return redirect(url_for("body"))	
+	else:
+		flash("You must be logged in to submit body logs", "warning")
+		return redirect(url_for("body"))
 
 @app.route("/statistics")
 def statistics():
@@ -440,6 +535,8 @@ def statistics():
 @app.route("/profile")
 def profile():
 	if "user_id" in session: # session token found
+		print str(g.user.food_history)
+		
 		return render_template("profile.html")
 	else:
 		flash("Must be logged in to view profiles.", "info")

@@ -22,32 +22,117 @@
 		
 		{% if g.user.bodylog is defined %}
 		
-			<table class="table table-striped">
-				<thead>
-					<tr>
-						<th class="col-md-2">Date</th>
-						<th class="col-md-2">Weight</th>
-						<th class="col-md-2">Body Fat</th>
-						<th class="col-md-2">Lean Muscle</th>
-						<th class="col-md-3"></th>
-						<th class="col-md-1 text-right">Edit</th>
-					</tr>
-				</thead>
-				<tbody>
-					{% for log in g.user.bodylog %}
+			<div class="col-md-4">
+		
+				<div class="page-heading">
+					<h4>Weight</h4>
+				</div>
+				
+				<table class="table table-striped">
+					<thead>
 						<tr>
-							<td>{{ log.timestamp }}</td>
-							<td>{{ log.weight }}</td>
-							<td>{{ log.bodyfat }}</td>
-							<td>{{ log.lean_muscle }}</td>
-							<td></td>
-							<td><span class="pull-right glyphicon glyphicon-pencil"></span></td>
+							<th class="col-md-3">Date</th>
+							<th class="col-md-2">Weight</th>
+							<th class="col-md-3">Body Fat</th>
+							<th class="col-md-3">Lean Muscle</th>
+							<th class="col-md-1 text-right">Edit</th>
 						</tr>
-					{% endfor %}
-				</tbody>
+					</thead>
+					<tbody>
+						{% for log in g.user.bodylog %}
+							<tr>
+								<td>{{ log.timestamp }}</td>
+								<td>{{ log.weight }}</td>
+								<td>{{ log.bodyfat }}</td>
+								<td>{{ log.lean_muscle }}</td>
+								<td></td>
+								<td><span class="pull-right glyphicon glyphicon-pencil"></span></td>
+							</tr>
+						{% endfor %}
+					</tbody>
 		
 		
-			</table>
+				</table>
+				
+			</div>
+			
+			<div class="col-md-4">
+
+				<div class="page-heading">
+					<h4>Circumference</h4>
+				</div>
+				
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th class="col-md-3">Location</th>
+							<th class="col-md-3">Start</th>
+							<th class="col-md-3">Current</th>
+							<th class="col-md-3">Net Change</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<th>Chest</th>
+						</tr>
+						<tr>
+							<th>Waist</th>
+						</tr>
+						<tr>
+							<th>Thigh</th>
+						</tr>
+						<tr>
+							<th>Neck</th>
+						</tr>
+						<tr>
+							<th>Upper Arm</th>
+						</tr>
+					</tbody>
+				</table>
+				
+			</div>
+			
+			<div class="col-md-4">
+			
+				<div class="page-heading">
+					<h4>Caliper Measurements</h4>
+				</div>
+				
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th class="col-md-3">Location</th>
+							<th class="col-md-3">Start</th>
+							<th class="col-md-3">Current</th>
+							<th class="col-md-3">Net Change</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<th>Chest</th>
+						</tr>
+						<tr>
+							<th>Abdominal</th>
+						</tr>
+						<tr>
+							<th>Thigh</th>
+						</tr>
+						<tr>
+							<th>Tricept</th>
+						</tr>
+						<tr>
+							<th>Subscapular</th>
+						</tr>
+						<tr>
+							<th>Suprailiac</th>
+						</tr>
+						<tr>
+							<th>Midaxillary</th>
+						</tr>
+					</tbody>
+				</table>
+				
+			</div>
 		
 		{% else %}
 			<p>No body logs have been entered yet!</p>
