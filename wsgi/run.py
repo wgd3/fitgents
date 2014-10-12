@@ -1,6 +1,6 @@
 import os, datetime, sys, csv
 from flask import Flask
-from flask import render_template
+from flask import render_template, jsonify
 from flask import request, session, redirect, flash, g, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
@@ -40,6 +40,7 @@ class User(db.Model):
 	goal_weight = db.Column(db.Float)
 	goal_bodyfat = db.Column(db.Float)
 	sign_up_date = db.Column(db.Date)
+	calorie_goal = db.Column(db.Integer)
 
 	@hybrid_property
 	def password(self):
@@ -91,6 +92,20 @@ class FoodHistory(db.Model):
 	def __repr__(self):
 		return '<User %s consumed %d calories on %s and cheat_day is set to %s>' % (self.user_id, self.calories, self.timestamp, self.cheat_day)
 	
+	@property
+	def serialize(self):
+		return {
+			'id': self.id,
+			'user_id': self.user_id,
+			'timestamp': self.timestamp,
+			'calories': self.calories,
+			'protein': self.protein,
+			'fat': self.fat,
+			'carbohydrates': self.carbohydrates,
+			'cheat_day': self.cheat_day,
+			'notes': self.notes
+		}
+		
 class SleepHistory(db.Model):
 	__tablename__ = 'sleep_history'
 	id = db.Column(db.Integer, primary_key=True)
@@ -331,6 +346,37 @@ def food():
 			
 	else:
 		return render_template("food.html")
+		
+@app.route("/food/record/<int:recNum>", methods = ["GET", "POST"])
+def modifyFoodRecord(recNum):
+	if "user_id" in session:
+		if request.method == "GET":
+			try:
+				foodRecord = FoodHistory.query.get(recNum)
+				print "Successfully grabbed food log %d" % recNum
+				
+				if foodRecord.user_id != session['user_id']:
+					flash("You're not authorized to read the food record.", "warning")
+					return redirect(url_for("food"))
+				
+				return jsonify(foodRecord.serialize)
+				
+			except Exception as e:
+				flash("Error grabbing record from food log", "warning")
+				return redirect(url_for("food"))
+				
+		if request.method == "POST":
+			try:
+				foodRecord = FoodHistory.query.get(redNum)
+				print "Successfully grabbed food log %d" % recNum
+	
+				
+			except Exception as e:
+				flash("Error modifying record from food log", "warning")
+				return redirect(url_for("food"))				
+	else:
+		flash("You must be logged in to modify food records.", "warning")
+		return redirect(url_for("index"))
 
 @app.route("/food/new", methods=["POST"])
 def addfood():
@@ -620,6 +666,33 @@ def updateGoalBodyFat():
 	else:
 		flash("You must be logged in to view this page.", "warning")
 		return redirect(url_for("index"))
+		
+@app.route("/profile/goal_calories", methods = ["POST"])
+def updateGoalCalorie():
+	if "user_id" in session:
+		print "Attempting to update the goal calorie intake for user %s" % g.user.name
+		
+		if request.form['inputCalories']:
+			print "Updating goal calorie to %s" % request.form['inputCalories']
+			try:
+				goalUser = User.query.filter_by(email=session['user_email']).first()
+				goalUser.calorie_goal = request.form['inputCalories']
+				
+				db.session.commit()
+				flash("Goal calorie intake updated successfully", "success")
+				return redirect(url_for("profile"))
+				
+			except Exception as e:
+				print str(e)
+				flash("There was an error updating your goal calorie intake", "warning")
+				return redirect(url_for("profile"))
+		else:
+			flash("No new calorie intake goal entered, try again.", "warning")
+			return redirect(url_for("profile"))
+		
+	else:
+		flash("You must be logged in to view this page.", "warning")
+		return redirect(url_for("index"))		
 		
 @app.route("/profile/update/<detail>", methods = ["POST"])
 def updateProfile(detail):

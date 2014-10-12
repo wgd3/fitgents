@@ -126,7 +126,7 @@
 								<td>{{ log.carbohydrates }}</td>
 								<td>{% if log.cheat_day %}<span class="glyphicon glyphicon-ok"></span>{% endif %}
 								<td>{{ log.notes }}</td>
-								<td><span class="pull-right glyphicon glyphicon-pencil"></span></td>
+								<td><a href="#" class="editrow_food" data-record="{{ log.id }}"><span class="pull-right glyphicon glyphicon-pencil"></span></a></td>
 							</tr>
 						{% endfor %}
 					</tbody>
