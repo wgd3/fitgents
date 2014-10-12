@@ -332,8 +332,6 @@ def food():
 				foodLogQuery = FoodHistory.query.filter_by(user_id=session['user_id']).order_by(db.desc(FoodHistory.timestamp))
 				print "Successfully queried the db for food history and found %d records" % foodLogCount
 				
-				for log in foodLogQuery:
-					print str(log)
 				
 				g.user.foodlog = foodLogQuery
 				
@@ -367,11 +365,31 @@ def modifyFoodRecord(recNum):
 				
 		if request.method == "POST":
 			try:
-				foodRecord = FoodHistory.query.get(redNum)
+				foodRecord = FoodHistory.query.get(recNum)
 				print "Successfully grabbed food log %d" % recNum
+				print foodRecord.serialize
 	
+				foodRecord.calories = request.form['inputCalories']
+				print "Updated calories"
+				foodRecord.fat = request.form['inputFat']
+				print "Updated fat.."
+				foodRecord.protein = request.form['inputProtein']
+				print "Updated protein"
+				foodRecord.carbohydrates = request.form['inputCarbohydrates']
+				print "updated carbs"
+				# TODO - figure out why the check box below doesn't work
+				#foodRecord.cheat_day = request.form['inputCheatDay']
+				#print "updated cheat day"
+				foodRecord.notes = request.form['inputNotes']
+				print "updated notes"
+				
+				db.session.commit()
+				flash("Successfully updated food record %d" % recNum, "success")
+				
+				return redirect(url_for("food"))
 				
 			except Exception as e:
+				print str(e)
 				flash("Error modifying record from food log", "warning")
 				return redirect(url_for("food"))				
 	else:
