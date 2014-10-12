@@ -23,9 +23,10 @@
 		{% if g.user.sleeplog is defined %}
 		
 			<div class="col-lg-12">
-				<canvas id="sleepChart" class="hidden-xs hidden-sm hidden-md"></canvas>
+				<canvas id="sleepChart" ></canvas>
 
 			</div>
+			<br>
 			<script>
 				var ctx = $("#sleepChart").get(0).getContext("2d");
 				
@@ -35,7 +36,7 @@
 					datasets: [
 						{
 							label: "Time In Bed",
-							data: [{% for log in g.user.sleeplog %}"{{ log.total_time }}",{% endfor %}].reverse(),
+							data: [{% for log in g.user.sleeplog %}"{{ log.total_time_in_minutes }}",{% endfor %}].reverse(),
 							fillColor: "rgba(220,220,220,0.2)",
 							strokeColor: "rgba(220,220,220,1)",
 							pointColor: "rgba(220,220,220,1)",
@@ -85,7 +86,7 @@
 					datasetFill : true,
 
 					// Boolean - whether or not the chart should be responsive and resize when the browser does.
-					responsive: false,
+					responsive: true,
 				
 					// Boolean - whether to maintain the starting aspect ratio or not when responsive, if set to false, will take up entire container
 					maintainAspectRatio: false,
@@ -96,18 +97,18 @@
 				newWidth = theCanvas.parent().width()
 				theCanvas.prop({
 					width: newWidth,
-					height: 400,
+					height: 300,
 				});
 				var foodChart = new Chart(ctx).Line(data, options);
 			
 			</script>		
-		
+
 			<table class="table table-striped">
 				<thead>
 					<tr>
 						<th class="col-md-2">Sleep Start</th>
 						<th class="col-md-2">Sleep End</th>
-						<th class="col-md-3">Minutes In Bed</th>
+						<th class="col-md-3">Time In Bed</th>
 						<th class="col-md-2">Quality</th>
 						<th class="col-md-2">Wake Up Mood</th>
 						<th class="col-md-1 text-right">Edit</th>

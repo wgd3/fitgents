@@ -98,7 +98,8 @@ class SleepHistory(db.Model):
 	sleep_start = db.Column(db.DateTime)
 	sleep_end = db.Column(db.DateTime)
 	quality = db.Column(db.Float)
-	total_time = db.Column(db.Date)
+	total_time = db.Column(db.Time)
+	total_time_in_minutes = db.Column(db.Integer)
 	wake_up_mood = db.Column(db.Text)
 
 class BodyHistory(db.Model):
@@ -435,7 +436,8 @@ def analyze_sleep_csv(sleep_log):
 		sleepLog = SleepHistory(user_id = session['user_id'],
 								sleep_start = line['Start'],
 								sleep_end = line['End'], 
-								total_time = sleepInMinutes,
+								total_time = line['Time in bed'],
+								total_time_in_minutes = sleepInMinutes,
 								quality = sleepQuality,
 								wake_up_mood = line['Wake up'])
 		
@@ -464,6 +466,10 @@ def body():
 			user = User.query.get(session['user_id'])
 			g.user.bodylog = user.body_history.order_by(db.asc(BodyHistory.timestamp))
 			
+			g.user.startlog = user.body_history.order_by(db.asc(BodyHistory.timestamp)).first()
+			g.user.currentlog = user.body_history.order_by(db.desc(BodyHistory.timestamp)).first()
+
+
 			return render_template("body.html")
 		except Exception as e:
 			print str(e)

@@ -23,7 +23,7 @@
 		{% if g.user.foodlog is defined %}
 		
 			<div class="col-lg-12">
-				<canvas id="foodChart" class="hidden-xs hidden-sm hidden-md"></canvas>
+				<canvas id="foodChart"></canvas>
 
 			</div>
 			<script>
@@ -86,7 +86,7 @@
 					datasetFill : true,
 
 					// Boolean - whether or not the chart should be responsive and resize when the browser does.
-					responsive: false,
+					responsive: true,
 				
 					// Boolean - whether to maintain the starting aspect ratio or not when responsive, if set to false, will take up entire container
 					maintainAspectRatio: false,
@@ -97,42 +97,43 @@
 				newWidth = theCanvas.parent().width()
 				theCanvas.prop({
 					width: newWidth,
-					height: 400,
+					height: 300,
 				});
 				var foodChart = new Chart(ctx).Line(data, options);
 							
 			</script>
-		
-			<table class="table table-striped">
-				<thead>
-					<tr>
-						<th class="col-md-2">Date</th>
-						<th class="col-md-2">Calories</th>
-						<th class="col-md-1">Protein</th>
-						<th class="col-md-1">Fat</th>
-						<th class="col-md-1">Carbs</th>
-						<th class="col-md-2">Cheat Day</th>
-						<th class="col-md-2">Notes</th>
-						<th class="col-md-1 text-right">Edit</th>
-					</tr>
-				</thead>
-				<tbody>
-					{% for log in g.user.foodlog %}
+			<div class="row">
+				<table class="table table-striped">
+					<thead>
 						<tr>
-							<td>{{ log.timestamp }}</td>
-							<td>{{ log.calories }}</td>
-							<td>{{ log.protein }}</td>
-							<td>{{ log.fat }}</td>
-							<td>{{ log.carbohydrates }}</td>
-							<td>{% if log.cheat_day %}<span class="glyphicon glyphicon-ok"></span>{% endif %}
-							<td>{{ log.notes }}</td>
-							<td><span class="pull-right glyphicon glyphicon-pencil"></span></td>
+							<th class="col-md-2">Date</th>
+							<th class="col-md-2">Calories</th>
+							<th class="col-md-1">Protein</th>
+							<th class="col-md-1">Fat</th>
+							<th class="col-md-1">Carbs</th>
+							<th class="col-md-2">Cheat Day</th>
+							<th class="col-md-2">Notes</th>
+							<th class="col-md-1 text-right">Edit</th>
 						</tr>
-					{% endfor %}
-				</tbody>
+					</thead>
+					<tbody>
+						{% for log in g.user.foodlog %}
+							<tr>
+								<td>{{ log.timestamp }}</td>
+								<td>{{ log.calories }}</td>
+								<td>{{ log.protein }}</td>
+								<td>{{ log.fat }}</td>
+								<td>{{ log.carbohydrates }}</td>
+								<td>{% if log.cheat_day %}<span class="glyphicon glyphicon-ok"></span>{% endif %}
+								<td>{{ log.notes }}</td>
+								<td><span class="pull-right glyphicon glyphicon-pencil"></span></td>
+							</tr>
+						{% endfor %}
+					</tbody>
 		
 		
-			</table>
+				</table>
+			</div>
 		
 		{% else %}
 			<p>No food logs have been entered yet!</p>
