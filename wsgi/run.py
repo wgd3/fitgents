@@ -465,6 +465,45 @@ def sleep():
 			return redirect(url_for("sleep"))
 	else:
 		return render_template("sleep.html")
+		
+@app.route("/sleep/new", methods=["POST"])
+def addSleep():
+	if "user_id" in session:
+		if request.form['inputDate']:
+			sleepDate = request.form['inputDate']
+			print "Set sleep date..."
+		else:
+			flash("New sleep data must have a  start date", "warning")
+			return redirect(url_for("sleep"))
+			
+		if request.form['inputMinutes']:
+			sleepMinutes = request.form['inputMinutes']
+			print "Set sleep minutes..."
+		else:
+			flash("New sleep data must include the number of minutes slept", "warning")
+			return redirect(url_for("sleep"))
+		
+		try:
+			sleepLog = SleepHistory(user_id = session['user_id'],
+									sleep_start = sleepDate,
+									total_time_in_minutes = sleepMinutes,
+									total_time = datetime.time(int(sleepMinutes)/60))
+									
+			
+			db.session.add(sleepLog)
+			db.session.commit()
+			
+			flash("Successfully added new sleep data", "success")
+			return redirect(url_for("sleep"))
+		
+		except Exception as e:
+			print str(e)
+			flash("There was an error adding new sleep data", "warning")
+			return redirect(url_for("sleep"))
+		
+	else:
+		flash("You must be logged in to add sleep data", "warning")
+		return redirect(url_for("index"))	
 	
 @app.route("/sleep/upload", methods=["POST"])
 def uploadSleep():

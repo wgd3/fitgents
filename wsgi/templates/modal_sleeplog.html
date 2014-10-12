@@ -17,7 +17,7 @@
 				<div class="tab-content">
 					<div id="form_manual_tab" class="tab-pane fade active in">
 						<br>
-						<form class="form-horizontal" id="form_manual">
+						<form class="form-horizontal" id="form_manual" action="/sleep/new" method="post">
 							<fieldset>
 								
 								<div class="form-group">
@@ -28,40 +28,9 @@
 								</div>
 								
 								<div class="form-group">
-									<label for="selectActivity" class="col-lg-2 control-label">Activity</label>
+									<label for="inputMinutes" class="col-lg-2 control-label">Total Sleep (minutes)</label>
 									<div class="col-lg-10">
-										<select class="form-control" id="selectActivity">
-											<option>[Add New Activity]</option>
-											<option>2</option>
-										</select>
-									</div>
-								</div>
-								
-								<div class="form-group">
-									<label for="inputCalories" class="col-lg-2 control-label">Calories Burned</label>
-									<div class="col-lg-10">
-										<input class="form-control" id="inputCalories" name="inputCalories" type="number">
-									</div>
-								</div>
-								
-								<div class="form-group">
-									<label for="inputTime" class="col-lg-2 control-label">Time (minutes)</label>
-									<div class="col-lg-10">
-										<input class="form-control" id="inputTime" name="inputTime" type="number">
-									</div>
-								</div>
-								
-								<div class="form-group">
-									<label for="inputDistance" class="col-lg-2 control-label">Distance (miles)</label>
-									<div class="col-lg-10">
-										<input class="form-control" id="inputDistance" name="inputDistance" type="number">
-									</div>
-								</div>
-								
-								<div class="form-group">
-									<label for="inputNotes" class="col-lg-2 control-label">Notes</label>
-									<div class="col-lg-10">
-										<textarea class="form-control" rows="3" id="inputNotes" name="inputNotes"></textarea>
+										<input class="form-control" id="inputMinutes" name="inputMinutes" type="number">
 									</div>
 								</div>
 								
