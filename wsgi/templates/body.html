@@ -34,17 +34,17 @@
 						<li class="list-group-item" style="padding: 0;"><h3>
 							Net Weight Change
 							{% if g.user.startlog.weight > g.user.currentlog.weight %}
-							<span class="label label-success pull-right">{{ g.user.startlog.weight - g.user.currentlog.weight }}lbs</span>
+							<span class="label label-success pull-right">-{{ g.user.startlog.weight - g.user.currentlog.weight }}lbs</span>
 							{% else %}
-							<span class="label label-danger pull-right">{{ g.user.startlog.weight - g.user.currentlog.weight }}lbs</span>
+							<span class="label label-danger pull-right">+{{ g.user.currentlog.weight - g.user.startlog.weight }}lbs</span>
 							{% endif %}
 						</h3></li>
 						<li class="list-group-item" style="padding: 0;"><h3>
 							Net BodyFat Change
 							{% if g.user.startlog.bodyfat > g.user.currentlog.bodyfat %}
-							<span class="label label-success pull-right">{{ g.user.startlog.bodyfat - g.user.currentlog.bodyfat }}%</span>
+							<span class="label label-success pull-right">-{{ g.user.startlog.bodyfat - g.user.currentlog.bodyfat }}%</span>
 							{% else %}
-							<span class="label label-danger pull-right">{{ g.user.startlog.bodyfat - g.user.currentlog.bodyfat }}%</span>
+							<span class="label label-danger pull-right">+{{ g.user.startlog.bodyfat - g.user.currentlog.bodyfat }}%</span>
 							{% endif %}
 						</h3></li>
 					</ul>

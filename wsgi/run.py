@@ -143,7 +143,30 @@ class ExcerciseHistory(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
 	timestamp = db.Column(db.DateTime)
-
+	excercise_id = db.Column(db.Integer, db.ForeignKey('excercise_list.id'))
+	time = db.Column(db.Time)       # cardio
+	distance = db.Column(db.Float)  # cardio
+	weight = db.Column(db.Float)    # strength
+	set_number = db.Column(db.Integer) # strength
+	reps = db.Column(db.Integer)	# strength
+	workout_number = db.Column(db.Integer)
+	'''
+	The idea with the last column is that each row can be either cardio or strength
+	If it's strength, then each workout needs it's own ID. Any number of sets and weight could be added,
+	but they would each be part of a specific workout grouping
+	'''
+	
+	
+class ExcerciseList(db.Model):
+	__tablename__ = 'excercise_list'
+	id = db.Column(db.Integer, primary_key=True)
+	added_by = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+	excercise_logs = db.relationship('ExcerciseHistory', backref='excercise_list', lazy='dynamic')
+	date_added = db.Column(db.Date)
+	name = db.Column(db.String(50))
+	type = db.Column(db.String(50)) # cardio or strength
+	
+	
 #############
 # Application decorators
 
@@ -406,7 +429,7 @@ def addfood():
 		logCarbohydrates = request.form['inputCarbohydrates']
 		logFat = request.form['inputFat']
 		logNotes = request.form['inputNotes']
-		logCheatDay = request.form['inputCheatDay']
+		#logCheatDay = request.form['inputCheatDay']
 	except Exception as e:
 		print str(e)
 		flash("There was an error pulling information from the form.", "warning")
@@ -423,7 +446,7 @@ def addfood():
 							fat = logFat,
 							carbohydrates = logCarbohydrates,
 							timestamp = logDate,
-							cheat_day = logCheatDay,
+							#cheat_day = logCheatDay,
 							notes = logNotes)
 	try:
 		db.session.add(logEntry)
