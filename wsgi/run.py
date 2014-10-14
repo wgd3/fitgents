@@ -1,4 +1,4 @@
-import os, datetime, sys, csv
+import os, datetime, sys, csv, time
 from flask import Flask
 from flask import render_template, jsonify
 from flask import request, session, redirect, flash, g, url_for
@@ -218,6 +218,28 @@ def page_not_found(e):
 @app.route("/")
 @app.route("/index")
 def index():
+	if "user_id" in session:
+		try:
+			currentBodyLog = BodyHistory.query.filter_by(user_id=session['user_id']).order_by(db.desc(BodyHistory.timestamp)).first()
+			currentFoodLog = FoodHistory.query.filter_by(user_id=session['user_id']).order_by(db.desc(FoodHistory.timestamp)).first()
+			currentExcerciseLog = ExcerciseHistory.query.filter_by(user_id=session['user_id']).order_by(db.desc(ExcerciseHistory.timestamp)).first()
+			
+			if currentBodyLog:
+				g.user.currentBodyLog = currentBodyLog
+			
+			if currentFoodLog:
+				g.user.currentFoodLog = currentFoodLog
+				
+			if currentExcerciseLog:
+				g.user.currentExcerciseLog = currentExcerciseLog
+				
+			return render_template("dashboard.html")
+			
+		except Exception as e:
+			print str(e)
+			flash("There was an error grabbing the most recent records for user.", "warning")
+			return render_template("dashboard.html")
+						
 	return render_template("dashboard.html")
 
 @app.route("/login", methods=["GET", "POST"])
@@ -553,6 +575,16 @@ def analyze_sleep_csv(sleep_log):
 	reader = csv.DictReader(sleep_log, delimiter=';')
 	for line in reader:
 		print "Reading line from sleep log, night of %s for %s hours" % (line['Start'], line['Time in bed'])
+		
+		# check to see if night already has data
+		userSleepHistory = SleepHistory.query.filter_by(user_id=session['user_id'])
+		startDate = time.strptime(line['Start'], "%Y-%m-%d %H:%M:%S")
+		for log in userSleepHistory:
+			#logStart = time.strptime(log.sleep_start, "%Y-%m-%d %H:%M:%S")
+			print "Comparing date %s to date in database %s" % (startDate, log.sleep_start)
+			if startDate ==log.sleep_start:
+				print "Found matching date, skipping record"
+				break
 		
 		# convert quality to float
 		sleepInMinutes = int(line['Time in bed'].split(':')[0])*60 + int(line['Time in bed'].split(':')[1])

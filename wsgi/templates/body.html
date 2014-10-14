@@ -111,9 +111,9 @@
 								{% if (g.user.startlog.circ_chest - g.user.currentlog.circ_chest) == 0.0 %}
 								No Change
 								{% elif (g.user.startlog.circ_chest - g.user.currentlog.circ_chest) > 0.0 %}
-								+{{ g.user.startlog.circ_chest - g.user.currentlog.circ_chest}}
-								{% elif (g.user.startlog.circ_chest - g.user.currentlog.circ_chest) < 0.0 %}
 								-{{ g.user.startlog.circ_chest - g.user.currentlog.circ_chest}}
+								{% elif (g.user.startlog.circ_chest - g.user.currentlog.circ_chest) < 0.0 %}
+								+{{ g.user.currentlog.circ_chest - g.user.startlog.circ_chest}}
 								{% endif %}
 							</td>
 						</tr>
@@ -125,9 +125,9 @@
 								{% if (g.user.startlog.circ_waist - g.user.currentlog.circ_waist) == 0.0 %}
 								No Change
 								{% elif (g.user.startlog.circ_waist - g.user.currentlog.circ_waist) > 0.0 %}
-								+{{ g.user.startlog.circ_waist - g.user.currentlog.circ_waist}}
-								{% elif (g.user.startlog.circ_waist - g.user.currentlog.circ_waist) < 0.0 %}
 								-{{ g.user.startlog.circ_waist - g.user.currentlog.circ_waist}}
+								{% elif (g.user.startlog.circ_waist - g.user.currentlog.circ_waist) < 0.0 %}
+								+{{ g.user.currentlog.circ_waist - g.user.startlog.circ_waist}}
 								{% endif %}
 							</td>
 						</tr>
@@ -139,9 +139,9 @@
 								{% if (g.user.startlog.circ_thigh - g.user.currentlog.circ_thigh) == 0.0 %}
 								No Change
 								{% elif (g.user.startlog.circ_thigh - g.user.currentlog.circ_thigh) > 0.0 %}
-								+{{ g.user.startlog.circ_thigh - g.user.currentlog.circ_thigh}}
-								{% elif (g.user.startlog.circ_thigh - g.user.currentlog.circ_thigh) < 0.0 %}
 								-{{ g.user.startlog.circ_thigh - g.user.currentlog.circ_thigh}}
+								{% elif (g.user.startlog.circ_thigh - g.user.currentlog.circ_thigh) < 0.0 %}
+								+{{ g.user.currentlog.circ_thigh - g.user.startlog.circ_thigh}}
 								{% endif %}
 							</td>
 						</tr>
@@ -153,9 +153,9 @@
 								{% if (g.user.startlog.circ_neck - g.user.currentlog.circ_neck) == 0.0 %}
 								No Change
 								{% elif (g.user.startlog.circ_neck - g.user.currentlog.circ_neck) > 0.0 %}
-								+{{ g.user.startlog.circ_neck - g.user.currentlog.circ_neck}}
-								{% elif (g.user.startlog.circ_neck - g.user.currentlog.circ_neck) < 0.0 %}
 								-{{ g.user.startlog.circ_neck - g.user.currentlog.circ_neck}}
+								{% elif (g.user.startlog.circ_neck - g.user.currentlog.circ_neck) < 0.0 %}
+								+{{ g.user.currentlog.circ_neck - g.user.startlog.circ_neck}}
 								{% endif %}
 							</td>
 						</tr>
@@ -167,9 +167,9 @@
 								{% if (g.user.startlog.circ_upperarm - g.user.currentlog.circ_upperarm) == 0.0 %}
 								No Change
 								{% elif (g.user.startlog.circ_upperarm - g.user.currentlog.circ_upperarm) > 0.0 %}
-								+{{ g.user.startlog.circ_upperarm - g.user.currentlog.circ_upperarm}}
-								{% elif (g.user.startlog.circ_upperarm - g.user.currentlog.circ_upperarm) < 0.0 %}
 								-{{ g.user.startlog.circ_upperarm - g.user.currentlog.circ_upperarm}}
+								{% elif (g.user.startlog.circ_upperarm - g.user.currentlog.circ_upperarm) < 0.0 %}
+								+{{ g.user.currentlog.circ_upperarm - g.user.startlog.circ_upperarm}}
 								{% endif %}
 							</td>
 						</tr>
@@ -202,9 +202,9 @@
 								{% if (g.user.startlog.fat_chest - g.user.currentlog.fat_chest) == 0.0 %}
 								No Change
 								{% elif (g.user.startlog.fat_chest - g.user.currentlog.fat_chest) > 0.0 %}
-								+{{ g.user.startlog.fat_chest - g.user.currentlog.fat_chest}}
-								{% elif (g.user.startlog.fat_chest - g.user.currentlog.fat_chest) < 0.0 %}
 								-{{ g.user.startlog.fat_chest - g.user.currentlog.fat_chest}}
+								{% elif (g.user.startlog.fat_chest - g.user.currentlog.fat_chest) < 0.0 %}
+								{{ g.user.startlog.fat_chest - g.user.currentlog.fat_chest}}
 								{% endif %}
 							</td>
 						</tr>
@@ -216,9 +216,9 @@
 								{% if (g.user.startlog.fat_abdominal - g.user.currentlog.fat_abdominal) == 0.0 %}
 								No Change
 								{% elif (g.user.startlog.fat_abdominal - g.user.currentlog.fat_abdominal) > 0.0 %}
-								+{{ g.user.startlog.fat_abdominal - g.user.currentlog.fat_abdominal}}
-								{% elif (g.user.startlog.fat_abdominal - g.user.currentlog.fat_abdominal) < 0.0 %}
 								-{{ g.user.startlog.fat_abdominal - g.user.currentlog.fat_abdominal}}
+								{% elif (g.user.startlog.fat_abdominal - g.user.currentlog.fat_abdominal) < 0.0 %}
+								{{ g.user.startlog.fat_abdominal - g.user.currentlog.fat_abdominal}}
 								{% endif %}
 							</td>
 						</tr>
@@ -230,23 +230,23 @@
 								{% if (g.user.startlog.fat_thigh - g.user.currentlog.fat_thigh) == 0.0 %}
 								No Change
 								{% elif (g.user.startlog.fat_thigh - g.user.currentlog.fat_thigh) > 0.0 %}
-								+{{ g.user.startlog.fat_thigh - g.user.currentlog.fat_thigh}}
-								{% elif (g.user.startlog.fat_thigh - g.user.currentlog.fat_thigh) < 0.0 %}
 								-{{ g.user.startlog.fat_thigh - g.user.currentlog.fat_thigh}}
+								{% elif (g.user.startlog.fat_thigh - g.user.currentlog.fat_thigh) < 0.0 %}
+								{{ g.user.startlog.fat_thigh - g.user.currentlog.fat_thigh}}
 								{% endif %}
 							</td>
 						</tr>
 						<tr>
-							<th>Tricept</th>
+							<th>Tricep</th>
 							<td>{{ g.user.startlog.fat_tricep }}</td>
 							<td>{{ g.user.currentlog.fat_tricep }}</td>
 							<td>
 								{% if (g.user.startlog.fat_tricep - g.user.currentlog.fat_tricep) == 0.0 %}
 								No Change
 								{% elif (g.user.startlog.fat_tricep - g.user.currentlog.fat_tricep) > 0.0 %}
-								+{{ g.user.startlog.fat_tricep - g.user.currentlog.fat_tricep}}
-								{% elif (g.user.startlog.fat_tricep - g.user.currentlog.fat_tricep) < 0.0 %}
 								-{{ g.user.startlog.fat_tricep - g.user.currentlog.fat_tricep}}
+								{% elif (g.user.startlog.fat_tricep - g.user.currentlog.fat_tricep) < 0.0 %}
+								{{ g.user.startlog.fat_tricep - g.user.currentlog.fat_tricep}}
 								{% endif %}
 							</td>
 						</tr>
@@ -258,9 +258,9 @@
 								{% if (g.user.startlog.fat_subscapular - g.user.currentlog.fat_subscapular) == 0.0 %}
 								No Change
 								{% elif (g.user.startlog.fat_subscapular - g.user.currentlog.fat_subscapular) > 0.0 %}
-								+{{ g.user.startlog.fat_subscapular - g.user.currentlog.fat_subscapular}}
-								{% elif (g.user.startlog.fat_subscapular - g.user.currentlog.fat_subscapular) < 0.0 %}
 								-{{ g.user.startlog.fat_subscapular - g.user.currentlog.fat_subscapular}}
+								{% elif (g.user.startlog.fat_subscapular - g.user.currentlog.fat_subscapular) < 0.0 %}
+								{{ g.user.startlog.fat_subscapular - g.user.currentlog.fat_subscapular}}
 								{% endif %}
 							</td>
 						</tr>
@@ -272,9 +272,9 @@
 								{% if (g.user.startlog.fat_suprailiac - g.user.currentlog.fat_suprailiac) == 0.0 %}
 								No Change
 								{% elif (g.user.startlog.fat_suprailiac - g.user.currentlog.fat_suprailiac) > 0.0 %}
-								+{{ g.user.startlog.fat_suprailiac - g.user.currentlog.fat_suprailiac}}
-								{% elif (g.user.startlog.fat_suprailiac - g.user.currentlog.fat_suprailiac) < 0.0 %}
 								-{{ g.user.startlog.fat_suprailiac - g.user.currentlog.fat_suprailiac}}
+								{% elif (g.user.startlog.fat_suprailiac - g.user.currentlog.fat_suprailiac) < 0.0 %}
+								{{ g.user.startlog.fat_suprailiac - g.user.currentlog.fat_suprailiac}}
 								{% endif %}
 							</td>
 						</tr>
@@ -286,9 +286,9 @@
 								{% if (g.user.startlog.fat_midaxillary - g.user.currentlog.fat_midaxillary) == 0.0 %}
 								No Change
 								{% elif (g.user.startlog.fat_midaxillary - g.user.currentlog.fat_midaxillary) > 0.0 %}
-								+{{ g.user.startlog.fat_midaxillary - g.user.currentlog.fat_midaxillary}}
-								{% elif (g.user.startlog.fat_midaxillary - g.user.currentlog.fat_midaxillary) < 0.0 %}
 								-{{ g.user.startlog.fat_midaxillary - g.user.currentlog.fat_midaxillary}}
+								{% elif (g.user.startlog.fat_midaxillary - g.user.currentlog.fat_midaxillary) < 0.0 %}
+								{{ g.user.startlog.fat_midaxillary - g.user.currentlog.fat_midaxillary}}
 								{% endif %}
 							</td>
 						</tr>
