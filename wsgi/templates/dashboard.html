@@ -43,13 +43,37 @@
 							<tbody>
 								<tr>
 									<th>Weight</th>
-									<td>{{ g.user.currentBodyLog.weight }}</td>
-									<td>{{ g.user.goal_weight }}</td>
+									<td>
+										{% if g.user.currentBodyLog is defined %}
+											{{ g.user.currentBodyLog.weight }}
+										{% else %}
+											None Recorded
+										{% endif %}
+									</td>
+									<td>
+										{% if g.user.goal_weight != 0.0 %}
+											{{ g.user.goal_weight }}
+										{% else %}
+											Not Set
+										{% endif %}
+									</td>
 								</tr>
 								<tr>
 									<th>Body Fat</th>
-									<td>{{ g.user.currentBodyLog.bodyfat }}</td>
-									<td>{{ g.user.goal_bodyfat }}</td>
+									<td>
+										{% if g.user.currentBodyLog is defined %}
+											{{ g.user.currentBodyLog.bodyfat }}
+										{% else %}
+											None Recorded
+										{% endif %}
+									</td>
+									<td>
+										{% if g.user.goal_bodyfat != 0.0 %}
+											{{ g.user.goal_bodyfat }}
+										{% else %}
+											Not Set
+										{% endif %}
+									</td>
 								</tr>
 							</tbody>
 						</table>

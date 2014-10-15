@@ -574,39 +574,43 @@ def allowed_file(filename):
 def analyze_sleep_csv(sleep_log):
 	reader = csv.DictReader(sleep_log, delimiter=';')
 	for line in reader:
+		validRecord = True
 		print "Reading line from sleep log, night of %s for %s hours" % (line['Start'], line['Time in bed'])
 		
 		# check to see if night already has data
 		userSleepHistory = SleepHistory.query.filter_by(user_id=session['user_id'])
-		startDate = time.strptime(line['Start'], "%Y-%m-%d %H:%M:%S")
+		startDate = line['Start']
 		for log in userSleepHistory:
+			print str(log.__class__)
+			print str(startDate.__class__)
 			#logStart = time.strptime(log.sleep_start, "%Y-%m-%d %H:%M:%S")
 			print "Comparing date %s to date in database %s" % (startDate, log.sleep_start)
-			if startDate ==log.sleep_start:
+			if startDate == str(log.sleep_start):
 				print "Found matching date, skipping record"
-				break
+				validRecord = False
 		
-		# convert quality to float
-		sleepInMinutes = int(line['Time in bed'].split(':')[0])*60 + int(line['Time in bed'].split(':')[1])
-		sleepQuality = float(line['Sleep quality'].replace('%',''))/100
-		print "User slept for %d minutes with a %d quality rating on %s" % (sleepInMinutes, sleepQuality, line['Start'])
+		if validRecord:
+			# convert quality to float
+			sleepInMinutes = int(line['Time in bed'].split(':')[0])*60 + int(line['Time in bed'].split(':')[1])
+			sleepQuality = float(line['Sleep quality'].replace('%',''))/100
+			print "User slept for %d minutes with a %d quality rating on %s" % (sleepInMinutes, sleepQuality, line['Start'])
 		
-		sleepLog = SleepHistory(user_id = session['user_id'],
-								sleep_start = line['Start'],
-								sleep_end = line['End'], 
-								total_time = line['Time in bed'],
-								total_time_in_minutes = sleepInMinutes,
-								quality = sleepQuality,
-								wake_up_mood = line['Wake up'])
+			sleepLog = SleepHistory(user_id = session['user_id'],
+									sleep_start = line['Start'],
+									sleep_end = line['End'], 
+									total_time = line['Time in bed'],
+									total_time_in_minutes = sleepInMinutes,
+									quality = sleepQuality,
+									wake_up_mood = line['Wake up'])
 		
-		try:
-			# attempt adding the log to the database
-			db.session.add(sleepLog)
-			print "Added another line to the database successfully!"
-		except Exception as e:
-			print str(e)
-			flash("There was an error submitting one of the lines from the CSV file to the database.", "warning")
-			return redirect(url_for("sleep"))
+			try:
+				# attempt adding the log to the database
+				db.session.add(sleepLog)
+				print "Added another line to the database successfully!"
+			except Exception as e:
+				print str(e)
+				flash("There was an error submitting one of the lines from the CSV file to the database.", "warning")
+				return redirect(url_for("sleep"))
 	
 	try:
 		db.session.commit()
