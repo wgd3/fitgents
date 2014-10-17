@@ -3,7 +3,7 @@ from flask import Flask
 from flask import render_template, jsonify
 from flask import request, session, redirect, flash, g, url_for
 from flask_sqlalchemy import SQLAlchemy
-from flask.ext.login import LoginManager
+from flask.ext.mail import Mail, Message
 from random import SystemRandom
 from backports.pbkdf2 import pbkdf2_hmac, compare_digest
 from flask.ext.login import UserMixin
@@ -21,6 +21,8 @@ app.config['PROPAGATE_EXCEPTIONS'] = True
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 db = SQLAlchemy(app)
+mail = Mail(app)
+
 
 ### Database table definitions ###
 
@@ -682,16 +684,12 @@ def body():
 			print "Found %d entries in user's body log" % bodyLogCount
 			
 			if bodyLogCount > 0:
-				
 				g.user.bodylog = user.body_history.order_by(db.asc(BodyHistory.timestamp))
-			
 				g.user.startlog = user.body_history.order_by(db.asc(BodyHistory.timestamp)).first()
 				g.user.currentlog = user.body_history.order_by(db.desc(BodyHistory.timestamp)).first()
-
-
 			return render_template("body.html")
 		except Exception as e:
-			print str(e)
+			print "ERROR: " + str(e)
 			flash("There was a problem grabbing the body logs from the database.", "warning")
 			return redirect(url_for("body"))
 	else:
@@ -890,6 +888,18 @@ def updateProfile(detail):
 	else:
 		flash("You must be logged in to update your profile.", "warning")
 		return redirect(url_for("index"))
+
+@app.route('/email/test')
+def emailTest():
+	
+	msg = Message("This is a test of the FitGents email service!",
+					sender = 'fitgents@gmail.com',
+					recipients = ['wallace.daniel3@me.com'])
+	mail.send(msg)
+
+	flash("Test email sent")
+	return redirect(url_for("index"))
+
 
 if __name__ == "__main__":
 	app.run(debug = "True", host="0.0.0.0")
