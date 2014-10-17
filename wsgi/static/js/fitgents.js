@@ -44,4 +44,28 @@ $(document).ready( function() {
 	  	$(this).val("");
 	  });
 	})
+	
+	// This code segment is for dynamically calculating the lean muscle amount on the modal_bodylog page
+	$("#inputBodyFat").change( function() {
+		console.log("Detected a change in the inputBodyFat field");
+		var bodyWeightInput = $("#inputWeight");
+		var valBodyWeight = parseFloat(bodyWeightInput.val());
+		
+		if (valBodyWeight != 0) {
+				var valBodyFat = parseFloat($(this).val())/100;
+				console.log("Calculated body fat to be " + String(valBodyFat));
+				
+				var valLeanMusclePerc = 1 - valBodyFat;
+				console.log("Found the lean muscle percentage to be " + String(valLeanMusclePerc));
+				
+				var valLeanMuscleWeight = valBodyWeight * valLeanMusclePerc;
+				console.log("Found total lean muscle to be " + String(valLeanMuscleWeight));
+				
+				var leanMuscleInput = $("#inputLeanMuscle");
+				leanMuscleInput.val(valLeanMuscleWeight.toFixed(2));
+		} else {
+			var leanMuscleInput = $("#inputLeanMuscle");
+			leanMuscleInput.val("0");
+		};
+	});
 });

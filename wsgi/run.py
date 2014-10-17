@@ -678,10 +678,15 @@ def body():
 	if "user_id" in session:
 		try:
 			user = User.query.get(session['user_id'])
-			g.user.bodylog = user.body_history.order_by(db.asc(BodyHistory.timestamp))
+			bodyLogCount = user.body_history.count()
+			print "Found %d entries in user's body log" % bodyLogCount
 			
-			g.user.startlog = user.body_history.order_by(db.asc(BodyHistory.timestamp)).first()
-			g.user.currentlog = user.body_history.order_by(db.desc(BodyHistory.timestamp)).first()
+			if bodyLogCount > 0:
+				
+				g.user.bodylog = user.body_history.order_by(db.asc(BodyHistory.timestamp))
+			
+				g.user.startlog = user.body_history.order_by(db.asc(BodyHistory.timestamp)).first()
+				g.user.currentlog = user.body_history.order_by(db.desc(BodyHistory.timestamp)).first()
 
 
 			return render_template("body.html")
