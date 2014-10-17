@@ -149,7 +149,7 @@ class ExcerciseHistory(db.Model):
 	weight = db.Column(db.Float)    # strength
 	set_number = db.Column(db.Integer) # strength
 	reps = db.Column(db.Integer)	# strength
-	workout_number = db.Column(db.Integer)
+	notes = db.Column(db.String(300))
 	'''
 	The idea with the last column is that each row can be either cardio or strength
 	If it's strength, then each workout needs it's own ID. Any number of sets and weight could be added,
@@ -484,14 +484,68 @@ def addfood():
 @app.route("/excercise")
 # TODO: Implement POST request for adding logs
 def excercise():
-	return render_template("excercise.html")
+	if "user_id" in session:
+		try:		
+			excerciseLogCount = ExcerciseHistory.query.filter_by(user_id=session['user_id']).count()
+			if excerciseLogCount > 0:
+				excerciseLog = ExcerciseHistory.query.filter_by(user_id=session['user_id'])
+				g.user.excerciselog = excerciseLog
+			
+				return render_template("excercise.html")
+			
+			else:
+				return render_template("excercise.html")
+		except Exception as e:
+			print str(e)
+			flash("There was a problem querying the database for your excercise logs.", "warning")
+			return render_template("excercise.html")
+					
+	else:
+		return render_template("excercise.html")
+		
+@app.route('/excercise/addLog', methods = ['POST'])
+def addExcerciseLog():
+	if "user_id" in session:
+		logDate = request.form['inputDate']
+		logActivityType = request.form['selectActivity']
+		logCalories = request.form['inputCalories']
+		logTime = request.form['inputMinutes']
+		logDistance = request.form['inputDistance']
+		logNotes = request.form['inputNotes']
+		
+		# Check for empty values
+		validRecord = True
+		if logCalories == 0:
+			validRecord = False
+		if logTime == 0:
+			validRecord = False
+		if logDistance == 0:
+			validRecord = False
+			
+		if not validRecord:
+			flash("Please fill in all fields for cardio form", "warning")
+			return redirect(url_for("excercise"))
+			
+		try:
+			entry = ExcerciseHistory(user_id = session['user_id'],
+										timestamp = logDate,
+										time = logTime,
+										distance = logDistance)							
+			
+		except Exception as e:
+			print str(e)
+			flash("There was a problem adding your cardio log to the database", "warning")
+			return redirect(url_for("excercise"))		
+	else:
+		flash("You must be logged in to add new excercise logs", "warning")
+		return render_template("excercise.html")	
 
 @app.route("/sleep")
 # TODO: Implement POST request for adding logs
 def sleep():
 	if "user_id" in session:
 		try:
-			sleepLogCount = SleepHistory.query.filter_by(user_id=session['user_id'])
+			sleepLogCount = SleepHistory.query.filter_by(user_id=session['user_id']).count()
 			if sleepLogCount == 0:
 				print "Did not find any sleep logs for user %s" % session['user_name']
 				
@@ -581,9 +635,7 @@ def analyze_sleep_csv(sleep_log):
 		userSleepHistory = SleepHistory.query.filter_by(user_id=session['user_id'])
 		startDate = line['Start']
 		for log in userSleepHistory:
-			print str(log.__class__)
-			print str(startDate.__class__)
-			#logStart = time.strptime(log.sleep_start, "%Y-%m-%d %H:%M:%S")
+
 			print "Comparing date %s to date in database %s" % (startDate, log.sleep_start)
 			if startDate == str(log.sleep_start):
 				print "Found matching date, skipping record"
