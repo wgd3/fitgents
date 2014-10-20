@@ -22,17 +22,19 @@
 		
 		{% if g.user.foodlog is defined %}
 		
-			<div class="col-lg-12">
-				<canvas id="foodChart"></canvas>
-
+			<div class="col-lg-8">
+				<div class="well">
+					<canvas id="foodChart"></canvas>
+				</div>
 			</div>
 			<script>
+
 				var ctx = $("#foodChart").get(0).getContext("2d");
 				
 				// define the data for the chart
 				var revCalories = [{% for log in g.user.foodlog %}"{{ log.calories }}",{% endfor %}].reverse()
 				var data = {
-					labels: [{% for log in g.user.foodlog %}"{{ log.timestamp }}",{% endfor %}].reverse(),
+					labels: [{% for log in g.user.foodlog %}"{{ log.timestamp }}".split(" ", 1),{% endfor %}].reverse(),
 					datasets: [
 						{
 							label: "Calories",
@@ -66,6 +68,7 @@
 					scaleSteps: Math.ceil((max-start)/step),
 					scaleStepWidth: step,
 					scaleStartValue: start,
+					scaleShowLabels: true,
 					
 					//Boolean - Whether the line is curved between points
 					bezierCurve : true,
@@ -95,7 +98,7 @@
 					datasetFill : true,
 
 					// Boolean - whether or not the chart should be responsive and resize when the browser does.
-					responsive: true,
+					responsive: false,
 				
 					// Boolean - whether to maintain the starting aspect ratio or not when responsive, if set to false, will take up entire container
 					maintainAspectRatio: false,
@@ -105,12 +108,21 @@
 				var theCanvas = $('canvas');
 				newWidth = theCanvas.parent().width()
 				theCanvas.prop({
-					width: newWidth,
-					height: 300,
+					"width": newWidth,
+					"height": "300",
 				});
 				var foodChart = new Chart(ctx).Line(data, options);
 							
 			</script>
+			
+			<div class="col-lg-4">
+				<div class="well">
+				
+				</div>
+			</div>
+			
+			<hr class="col-lg-12">
+			
 			<div class="row">
 				<table class="table table-striped">
 					<thead>

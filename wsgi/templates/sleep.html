@@ -22,17 +22,18 @@
 		
 		{% if g.user.sleeplog is defined %}
 		
-			<div class="col-lg-12">
-				<canvas id="sleepChart" ></canvas>
-
+			<div class="col-lg-8">
+				<div class="well">
+					<canvas id="sleepChart"></canvas>
+				</div>
 			</div>
-			<br>
+			
 			<script>
 				var ctx = $("#sleepChart").get(0).getContext("2d");
 				
 				// define the data for the chart
 				var data = {
-					labels: [{% for log in g.user.sleeplog %}"{{ log.sleep_start }}",{% endfor %}].reverse(),
+					labels: [{% for log in g.user.sleeplog %}" ",{% endfor %}].reverse(),
 					datasets: [
 						{
 							label: "Time In Bed",
@@ -46,6 +47,10 @@
 						},
 					]
 				};
+				var max   = Math.max({{g.user.sleeplog|join(', ', attribute='total_time_in_minutes') }}) + 30;
+				var start = Math.min({{g.user.sleeplog|join(', ', attribute='total_time_in_minutes') }}) - 30;
+				var step = parseInt((max - start)/10);
+				
 				var options = {
 					///Boolean - Whether grid lines are shown across the chart
 					scaleShowGridLines : true,
@@ -56,6 +61,11 @@
 					//Number - Width of the grid lines
 					scaleGridLineWidth : 1,
 					
+					scaleOverride: true,
+					scaleSteps: Math.ceil((max-start)/step),
+					scaleStepWidth: step,
+					scaleStartValue: start,
+					scaleShowLabels: true,
 					scaleFontColor: "rgba(235,235,235)",
 					
 					//Boolean - Whether the line is curved between points
@@ -86,22 +96,31 @@
 					datasetFill : true,
 
 					// Boolean - whether or not the chart should be responsive and resize when the browser does.
-					responsive: true,
+					responsive: false,
 				
 					// Boolean - whether to maintain the starting aspect ratio or not when responsive, if set to false, will take up entire container
-					maintainAspectRatio: false,
+					maintainAspectRatio: true,
 				};
 				
 				//apply width settings
-				var theCanvas = $('canvas');
-				newWidth = theCanvas.parent().width()
+				var theCanvas = $('#sleepChart');
+				newWidth = theCanvas.parent().width();
 				theCanvas.prop({
-					width: newWidth,
-					height: 300,
+					"width": newWidth,
+					"height": "300",
 				});
-				var foodChart = new Chart(ctx).Line(data, options);
+				var sleepChart = new Chart(ctx).Line(data, options);
 			
 			</script>		
+
+			<div class="col-lg-4">
+				<div class="well">
+					<ul class="list-group">
+					
+					</ul>
+				</div>
+			</div>
+			<hr class="col-lg-12">
 
 			<table class="table table-striped">
 				<thead>
