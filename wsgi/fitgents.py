@@ -9,7 +9,7 @@ else:
 	SQLALCHEMY_MIGRATE_REPO = os.environ['OPENSHIFT_DATA_DIR'] + '/db_repository'
 
 SQLALCHEMY_ECHO = False
-SECRET_KEY = 'teh_secret'
+SECRET_KEY = '179428949761744668011701279644222272035'
 DEBUG = True
 
 ## Mail config

@@ -4,6 +4,7 @@ from flask import render_template, jsonify
 from flask import request, session, redirect, flash, g, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask.ext.mail import Mail, Message
+from itsdangerous import URLSafeSerializer, BadSignature
 from random import SystemRandom
 from backports.pbkdf2 import pbkdf2_hmac, compare_digest
 from flask.ext.login import UserMixin
@@ -43,6 +44,7 @@ class User(db.Model):
 	goal_bodyfat = db.Column(db.Float)
 	sign_up_date = db.Column(db.Date)
 	calorie_goal = db.Column(db.Integer)
+	verified_email = db.Column(db.Boolean)
 
 	@hybrid_property
 	def password(self):
@@ -75,6 +77,14 @@ class User(db.Model):
 		salt = bytes(self._salt)
 		buff = pbkdf2_hmac("sha512", pwd, salt, iterations=100000)
 		return bytes(buff)
+		
+	def activate(self):
+		if self.verified_email == False:
+			self.verified_email = True
+			return True
+		else:
+			print "User is trying to verify email, but it's already been verified"
+			return False
 
 	def __repr__(self):
 		return '<User %r>' % (self.name)
@@ -176,7 +186,6 @@ class ExcerciseList(db.Model):
 def load_user():
 	if "user_id" in session:
 		user = User.query.filter_by(id=session["user_id"]).first()
-		print "Found user in session: %s" % user.name
 	else:
 		user = {"name": "Guest"}
 		print "Found no user in session, using Guest"
@@ -216,6 +225,25 @@ def page_not_found(e):
 	return render_template("error.html", error_content=error_content)
 
 ##############
+# Helper functions
+
+def get_serializer(secret_key=None):
+	if secret_key is None:
+		secret_key = app.secret_key
+	return URLSafeSerializer(secret_key)
+	
+# Email alerts
+def alertAdmin(content, user_id=None):
+	msg = Message("Error report from FitGents", sender="fitgents@gmail.com", recipients=['wallace.daniel3@me.com'])
+	msg.body(content)
+	try:
+		mail.send(msg)
+		print "An email has been sent to the site's admin"
+	except Exception as e:
+		print "There was a problem alerting the admin"
+
+##############
+
 
 @app.route("/")
 @app.route("/index")
@@ -341,7 +369,7 @@ def register():
 					return redirect(url_for("register"))
 				
 				try:
-					entry = User(name = new_user_name, email = new_user_email, age = new_user_age, password=new_user_password, goal_weight = 0, goal_bodyfat = 0)
+					entry = User(name = new_user_name, email = new_user_email, age = new_user_age, password=new_user_password, goal_weight = 0, goal_bodyfat = 0, verified_email = False)
 					
 					db.session.add(entry)
 					db.session.commit()
@@ -349,7 +377,26 @@ def register():
 					newUser = User.query.filter_by(email=new_user_email).first()
 					session['user_id'] = newUser.id
 					
-					flash("User registration for %s was successful!" % new_user_name, "success")
+					print "Setting up user verification"
+					try:
+						### Set up email verification
+						s = get_serializer()
+						payload = s.dumps(session['user_id'])
+						
+						msg = Message("Please verify your FitGents account",
+										sender = "fitgents@gmail.com",
+										recipients = [new_user_email])
+										
+						msg.body = url_for("activate_user", payload = payload, _external = True)
+						
+						mail.send(msg)
+						
+					except Exception as e:
+						print str(e)
+						flash("Your account was created, but there was an issue setting up email verification.", "warning")
+						return redirect(url_for("profile"))
+					
+					flash("User registration for %s was successful! An email has been sent to verify your address and account, please check your inbox" % new_user_name, "success")
 					return redirect(url_for("profile"))
 					
 				except Exception as e:
@@ -777,14 +824,35 @@ def statistics():
 
 @app.route("/profile")
 def profile():
-	if "user_id" in session: # session token found
-		print "Goal Weight: " +str(g.user.goal_weight)
-		print "Goal BodyFat: " +str(g.user.goal_bodyfat)
-		
+	if "user_id" in session: 
+		if g.user.verified_email == False:
+			flash("You haven't verified your email yet, please check your inbox", "info")
 		return render_template("profile.html")
 	else:
 		flash("Must be logged in to view profiles.", "info")
 		return redirect(url_for("index"))
+		
+@app.route("/profile/activate/<payload>")
+def activate_user(payload):
+	s = get_serializer()
+	try:
+		user_id = s.loads(payload)
+	except BadSignature:
+		flash("Something went wrong with user verification", "warning")
+		return redirect(url_for("profile"))
+	
+	try:
+		user = User.query.filter_by(id=session['user_id']).first()
+		user.verified_email = True
+		db.session.commit()
+		
+		flash("Thank you for verifying your email!", "success")
+		return redirect(url_for("profile"))
+	except Exception as e:
+		print str(e)
+		alertAdmin("User %s was not able to correctly activate their email address %s" % (session['user_id'], payload))
+		flash("Something went wrong with your email verification, an alert has been sent to the site's admin.", "warning")
+		return redirect(url_for("profile"))
 		
 @app.route("/profile/goal_weight", methods = ["POST"])
 def updateGoalWeight():
@@ -892,13 +960,18 @@ def updateProfile(detail):
 @app.route('/email/test')
 def emailTest():
 	
-	msg = Message("This is a test of the FitGents email service!",
-					sender = 'fitgents@gmail.com',
-					recipients = ['wallace.daniel3@me.com'])
-	mail.send(msg)
-
-	flash("Test email sent")
-	return redirect(url_for("index"))
+	if 'MAIL_USERNAME' in os.environ and 'MAIL_PASSWORD' in os.environ:
+		msg = Message("This is a test of the FitGents email service!",
+						sender = 'fitgents@gmail.com',
+						recipients = ['wallace.daniel3@me.com'])
+		mail.send(msg)
+	
+		flash("Test email sent", "success")
+		return redirect(url_for("index"))
+	
+	else:
+		flash("Env variables aren't set properly for the mail system", "warning")
+		return redirect(url_for("index"))
 
 
 if __name__ == "__main__":

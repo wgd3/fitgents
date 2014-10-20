@@ -46,9 +46,10 @@
 						},
 					]
 				};
-				var step  = 300;
-				var max   = 2500;
-				var start = 500;
+				var max   = Math.max({{g.user.foodlog|join(', ', attribute='calories') }}) + 100;
+				var start = Math.min({{g.user.foodlog|join(', ', attribute='calories') }}) - 100;
+				var step = parseInt((max - start)/10);
+				console.log("Found min/max for the calories graph: " + String(max) + ", " + String(start));
 				var options = {
 					///Boolean - Whether grid lines are shown across the chart
 					scaleShowGridLines : true,
