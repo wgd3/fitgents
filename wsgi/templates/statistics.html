@@ -3,12 +3,17 @@
 {% block body %}
 
 	{% if g.user.name != "Guest" %}
-	
-		
+	<script src="/static/js/statlog.js"></script>
+	<div class="row" id="statLoadRow">
+		<h3 id="statLoadHeader">Analyzing data...</h3>
+		<div class="progress progress-striped active">
+			<div class="progress-bar" style="width: 1%" id="statLoadProgress"></div>
+		</div>
+	</div>
 	
 	
 	{% else %}
-	
+	<p>You must be logged in to view your stats!</p>
 	{% endif %}
 
 {% endblock %}
