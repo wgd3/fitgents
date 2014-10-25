@@ -116,7 +116,19 @@
 			<div class="col-lg-4">
 				<div class="well">
 					<ul class="list-group">
-					
+                        {% if sleep_stats is defined %}
+                        <li class="list-group-item" style="padding: 0;"><h4>
+                            Average Sleep Time: <span class="label label-primary pull-right">{{ sleep_stats.avg_minutes }} minutes</span>
+                        </h4></li>
+                        <li class="list-group-item" style="padding: 0"><h4>
+                            Average Sleep Start: <span class="label label-primary pull-right">{{ sleep_stats.avg_sleep_start }}</span>
+                        </h4></li>
+                         <li class="list-group-item" style="padding: 0"><h4>
+                            Average Sleep Quality: <span class="label label-primary pull-right">{{ sleep_stats.avg_quality }}%</span>
+                        </h4></li>
+                        {% else %}
+                        <li class="list-group-item" style="padding: 0">Something went wrong with the sleep stats!</li>
+                        {% endif %}
 					</ul>
 				</div>
 			</div>
