@@ -156,17 +156,13 @@ class ExcerciseHistory(db.Model):
 	user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
 	timestamp = db.Column(db.DateTime)
 	excercise_id = db.Column(db.Integer, db.ForeignKey('excercise_list.id'))
-	time = db.Column(db.Time)       # cardio
+	time = db.Column(db.Integer)       # cardio
 	distance = db.Column(db.Float)  # cardio
 	weight = db.Column(db.Float)    # strength
 	set_number = db.Column(db.Integer) # strength
 	reps = db.Column(db.Integer)	# strength
 	notes = db.Column(db.String(300))
-	'''
-	The idea with the last column is that each row can be either cardio or strength
-	If it's strength, then each workout needs it's own ID. Any number of sets and weight could be added,
-	but they would each be part of a specific workout grouping
-	'''
+
 	
 	
 class ExcerciseList(db.Model):
@@ -176,7 +172,8 @@ class ExcerciseList(db.Model):
 	excercise_logs = db.relationship('ExcerciseHistory', backref='excercise_list', lazy='dynamic')
 	date_added = db.Column(db.Date)
 	name = db.Column(db.String(50))
-	type = db.Column(db.String(50)) # cardio or strength
+	cardio = db.Column(db.Boolean) 
+	strength = db.Column(db.Boolean)
 	
 	
 #############
@@ -539,8 +536,22 @@ def excercise():
 			if excerciseLogCount > 0:
 				excerciseLog = ExcerciseHistory.query.filter_by(user_id=session['user_id'])
 				g.user.excerciselog = excerciseLog
+				
+				cycPace = 0
+				for log in excerciseLog:
+					print "Diving %d by %d to add to cycPace" % (log.distance, log.time)
+					cycPace = cycPace + (log.distance / log.time)
+					print "cycPace: %d" % cycPace
+				print "Setting cycAvgPace with the following formula: %d / %d" % (cycPace, excerciseLogCount)
+				cycAvgPace = cycPace / excerciseLogCount
+				
+				cycDistance = 0
+				for log in excerciseLog:
+					cycDistance = cycDistance + log.distance
 			
-				return render_template("excercise.html")
+				return render_template("excercise.html",
+										cycAvgPace = cycAvgPace,
+										cycDistance = cycDistance)
 			
 			else:
 				return render_template("excercise.html")
@@ -552,13 +563,13 @@ def excercise():
 	else:
 		return render_template("excercise.html")
 		
-@app.route('/excercise/addLog', methods = ['POST'])
+@app.route('/excercise/addlog', methods = ['POST'])
 def addExcerciseLog():
 	if "user_id" in session:
 		logDate = request.form['inputDate']
 		logActivityType = request.form['selectActivity']
 		logCalories = request.form['inputCalories']
-		logTime = request.form['inputMinutes']
+		logTime = request.form['inputTime']
 		logDistance = request.form['inputDistance']
 		logNotes = request.form['inputNotes']
 		
@@ -579,8 +590,13 @@ def addExcerciseLog():
 			entry = ExcerciseHistory(user_id = session['user_id'],
 										timestamp = logDate,
 										time = logTime,
-										distance = logDistance)							
+										distance = logDistance)
+										
+			db.session.add(entry)
+			db.session.commit()
 			
+			flash("Successfully added your cardio log!", "success")
+			return redirect(url_for("excercise"))
 		except Exception as e:
 			print str(e)
 			flash("There was a problem adding your cardio log to the database", "warning")
@@ -764,23 +780,8 @@ def addbodylog():
 		fat_suprailiac = request.form['inputFatSuprailiac']
 		fat_midaxillary = request.form['inputFatMidaxillary']
 		
-		if not timestamp or \
-			not weight or \
-			not bodyfat or \
-			not lean_muscle or \
-			not circ_chest or \
-			not circ_waist or \
-			not circ_thigh or \
-			not circ_neck or \
-			not circ_upperarm or \
-			not fat_chest or \
-			not fat_abdominal or \
-			not fat_thigh or \
-			not fat_tricep or \
-			not fat_subscapular or \
-			not fat_suprailiac or \
-			not fat_midaxillary:
-			flash("All fields required for body log.", "warning")
+		if not timestamp or not weight:
+			flash("Timestamp and weight fields required for body log.", "warning")
 			return redirect(url_for("body"))
 				
 		newEntry = BodyHistory(user_id=session['user_id'],
