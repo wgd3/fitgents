@@ -7,10 +7,8 @@ from flask.ext.mail import Mail, Message
 from itsdangerous import URLSafeSerializer, BadSignature
 from random import SystemRandom
 from backports.pbkdf2 import pbkdf2_hmac, compare_digest
-from flask.ext.login import UserMixin
 from sqlalchemy.ext.hybrid import hybrid_property
-from werkzeug import secure_filename
-
+import flask.ext.restless
 
 UPLOAD_FOLDER = '/path/to/the/uploads'
 ALLOWED_EXTENSIONS = set(['csv'])
@@ -23,6 +21,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 db = SQLAlchemy(app)
 mail = Mail(app)
+manager = flask.ext.restless.APIManager(app, flask_sqlalchemy_db=db)
 
 
 # ## Database table definitions ###
@@ -188,6 +187,8 @@ class ExcerciseList(db.Model):
     cardio = db.Column(db.Boolean)
     strength = db.Column(db.Boolean)
 
+# Create REST API endpoints
+manager.create_api(User, methods=['GET', 'POST', 'PUT', 'DELETE', 'PATCH'])
 
 #############
 # Application decorators

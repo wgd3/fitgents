@@ -112,29 +112,29 @@
                             <tbody>
                                 <tr>
                                     <th>Chest </th>
-                                    <td>{{ g.user.greek_chest }}</td>
+                                    <td id="greek_chest">{{ g.user.greek_chest }}</td>
 
                                     <th>Forearm </th>
-                                    <td>{{ g.user.greek_forearm }}</td>
+                                    <td id="greek_forearm">{{ g.user.greek_forearm }}</td>
 
                                     <th>Waist </th>
-                                    <td>{{ g.user.greek_waist }}</td>
+                                    <td id="greek_waist">{{ g.user.greek_waist }}</td>
 
                                     <th>Thigh </th>
-                                    <td>{{ g.user.greek_thigh }}</td>
+                                    <td id="greek_thigh">{{ g.user.greek_thigh }}</td>
                                 </tr>
                                 <tr>
                                     <th>Hip </th>
-                                    <td>{{ g.user.greek_hip }}</td>
+                                    <td id="greek_hip">{{ g.user.greek_hip }}</td>
 
                                     <th>Calf </th>
-                                    <td>{{ g.user.greek_calf }}</td>
+                                    <td id="greek_calf">{{ g.user.greek_calf }}</td>
 
                                     <th>Bicep </th>
-                                    <td>{{ g.user.greek_bicep }}</td>
+                                    <td id="greek_bicep">{{ g.user.greek_bicep }}</td>
 
                                     <th>Neck </th>
-                                    <td>{{ g.user.greek_neck }}</td>
+                                    <td id="greek_neck">{{ g.user.greek_neck }}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -142,7 +142,7 @@
                 {% else %}
                     <div class="jumbotron" style="padding-top: 20px; padding-bottom: 20px;">
                         <h3>Golden Ratio</h3>
-                        <p>Find out your Greek god-like measurements! </p><a href=#" class="btn btn-primary pull-right">Discover</a>
+                        <p>Find out your Greek god-like measurements! <a href=#" data-toggle="modal" data-target="modal_greekgod" class="btn btn-primary pull-right">Discover</a></p>
                     </div>
                 {% endif %}
                 </div>
@@ -187,21 +187,21 @@
 		</div>
 	</div>
 	
-	<div class="modal" id="modal_goalbodyfat">
+	<div class="modal" id="modal_greekgod">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-					<h4 class="modal-title">Update Goal Body Fat</h4>
+					<h4 class="modal-title">Update Golden Ratio Goals</h4>
 				</div>
 				<div class="modal-body">
-					<form class="form-horizontal" method="post" action="/profile/goal_bodyfat">
+					<form class="form-horizontal">
 						<fieldset>
 							<div class="form-group">
-								<label for="inputGoalBodyFat" class="col-md-4 control-label">New Body Fat Goal</label>
+								<label for="inputGreekWrist" class="col-md-4 control-label">Wrist Circumference</label>
 								<div class="col-md-3 input-group">
-									<input type="text" class="form-control" id="inputGoalBodyFat" name="inputGoalBodyFat" placeholder="body fat">
-									<span class="input-group-addon">%</span>
+									<input type="text" class="form-control" id="inputGreekWrist" name="inputGreekWrist" placeholder="circumference">
+									<span class="input-group-addon">in</span>
 								</div>
 							</div>
 							<div class="form-group">
@@ -289,6 +289,35 @@
 								<label for="inputCalories" class="col-md-4 control-label">Calories</label>
 								<div class="col-md-5 input-group">
 									<input type="text" class="form-control" id="inputCalories" name="inputCalories" placeholder="{{ g.user.calorie_goal }}">
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="col-lg-10 col-lg-offset-2">
+									<button class="btn btn-default">Cancel</button>
+									<button type="submit" class="btn btn-primary">Submit</button>
+								</div>
+							</div>
+						</fieldset>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal" id="modal_updatename">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+					<h4 class="modal-title">Update Your Name</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal" method="post" action="/profile/update/name">
+						<fieldset>
+							<div class="form-group">
+								<label for="inputName" class="col-md-4 control-label">Name</label>
+								<div class="col-md-3 input-group">
+									<input type="text" class="form-control" id="inputName" name="inputName" placeholder="{{ g.user.name }}">
 								</div>
 							</div>
 							<div class="form-group">
