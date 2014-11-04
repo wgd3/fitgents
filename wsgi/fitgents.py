@@ -1,11 +1,11 @@
 import os
 
 if not 'OPENSHIFT_POSTGRESQL_DB_URL' in os.environ:
-	SQLALCHEMY_DATABASE_URI = 'postgresql://adminvvg3utl:h7Q8GAk2msm1@127.0.0.1:5432/fitgents?charset=utf8'
+	SQLALCHEMY_DATABASE_URI = 'postgresql://adminvvg3utl:h7Q8GAk2msm1@127.0.0.1:5432/fitgents'
 	SQLALCHEMY_MIGRATE_REPO = os.path.abspath(os.path.dirname(__file__)) + '/../data/db_repository'
 
 else:
-	SQLALCHEMY_DATABASE_URI = os.environ['OPENSHIFT_POSTGRESQL_DB_URL']+'?charset=utf8'
+	SQLALCHEMY_DATABASE_URI = os.environ['OPENSHIFT_POSTGRESQL_DB_URL']
 	SQLALCHEMY_MIGRATE_REPO = os.environ['OPENSHIFT_DATA_DIR'] + '/db_repository'
 
 SQLALCHEMY_ECHO = False
