@@ -221,24 +221,25 @@
                 var wristCirc = $("#inputGreekWrist").val();
                 console.log("User entered a wrist circumference of " + String(wristCirc));
 
-                var returnData;
+                // calculate values
+                var greek_chest = 6.5 * wristCirc;
+                var greek_hips = greek_chest * .85;
+                var greek_waist = greek_chest * .7;
+                var greek_thigh = greek_chest *.53;
+                var greek_neck = greek_chest * .37;
+                var greek_bicep = greek_chest * .36;
+                var greek_calf = greek_chest * .34;
+                var greek_forearms = greek_chest * .29;
 
-                // this it querying a 3rd party site until I have a known-good formula
-                $.ajax({
-                    type: "post",
-                    url: "http://www.fitness.com/tools/greek_proportions/grith.php",
-                    data: 'txtWrist='+String(wristCirc)+'&txtUnit=inches',
-                    dataType: "jsonp",
-                    crossDomain: true,
-                    success: function(data) {
-                        console.log("Successfully hit third party site for wrist measurement!")
-                        console.log(data);
-                        returnData = data;
-                    },
-                    error: function() {
-                        console.log("Failed to grab measurements from third party");
-                    }
-                });
+                console.log("Found ideal values:");
+                console.log(String(greek_chest));
+                console.log(String(greek_hips));
+                console.log(String(greek_waist));
+                console.log(String(greek_thigh));
+                console.log(String(greek_neck));
+                console.log(String(greek_bicep));
+                console.log(String(greek_calf));
+                console.log(String(greek_forearms));
             });
 
         </script>
