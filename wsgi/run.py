@@ -45,6 +45,15 @@ class User(db.Model):
     sign_up_date = db.Column(db.Date)
     calorie_goal = db.Column(db.Integer)
     verified_email = db.Column(db.Boolean)
+    greek_wrist = db.Column(db.Float)
+    greek_chest = db.Column(db.Float)
+    greek_forearm = db.Column(db.Float)
+    greek_waist = db.Column(db.Float)
+    greek_thigh = db.Column(db.Float)
+    greek_hip = db.Column(db.Float)
+    greek_calf = db.Column(db.Float)
+    greek_bicep = db.Column(db.Float)
+    greek_neck = db.Column(db.Float)
 
     @hybrid_property
     def password(self):
@@ -564,8 +573,10 @@ def excercise():
 
                 cycPace = 0
                 for log in excerciseLog:
-                    print "Diving %d by %d to add to cycPace" % (log.distance, log.time)
-                    cycPace = cycPace + (log.distance / log.time)
+                    print log.distance.__class__
+                    print log.time.__class__
+                    print "Diving %d by %d to add to cycPace: %d" % (log.distance, log.time, (int(log.distance)/log.time))
+                    cycPace += (log.distance / log.time)
                     print "cycPace: %d" % cycPace
                 print "Setting cycAvgPace with the following formula: %d / %d" % (cycPace, excerciseLogCount)
                 cycAvgPace = cycPace / excerciseLogCount

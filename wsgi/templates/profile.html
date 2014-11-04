@@ -103,6 +103,57 @@
 					</div>
 				{% endif %}
 				</div>
+
+                <div class="row">
+                {% if g.user.greek_wrist is defined %}
+                    <div class="well">
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>Body Part</th>
+                                    <th>Greek God Goal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th>Chest </th>
+                                    <td>{{ g.user.greek_chest }}</td>
+
+                                    <th>Forearm </th>
+                                    <td>{{ g.user.greek_forearm }}</td>
+
+                                    <th>Waist </th>
+                                    <td>{{ g.user.greek_waist }}</td>
+
+                                    <th>Thigh </th>
+                                    <td>{{ g.user.greek_thigh }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Hip </th>
+                                    <td>{{ g.user.greek_hip }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Calf </th>
+                                    <td>{{ g.user.greek_calf }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Bicep </th>
+                                    <td>{{ g.user.greek_bicep }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Neck </th>
+                                    <td>{{ g.user.greek_neck }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="jumbotron" style="padding-top: 20px; padding-bottom: 20px;">
+                        <h3>Golden Ratio</h3>
+                        <p>Find out your Greek god-like measurements! </p><a href=#" class="btn btn-primary pull-right">Discover</a>
+                    </div>
+                {% endif %}
+                </div>
 			
 			</div>
 			
