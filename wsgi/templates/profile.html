@@ -142,7 +142,7 @@
                 {% else %}
                     <div class="jumbotron" style="padding-top: 20px; padding-bottom: 20px;">
                         <h3>Golden Ratio</h3>
-                        <p>Find out your Greek god-like measurements! <a href=#" data-toggle="modal" data-target="modal_greekgod" class="btn btn-primary pull-right">Discover</a></p>
+                        <p>Find out your Greek god-like measurements! <a href="#" data-toggle="modal" data-target="#modal_greekgod" class="btn btn-primary pull-right">Discover</a></p>
                     </div>
                 {% endif %}
                 </div>
@@ -195,7 +195,7 @@
 					<h4 class="modal-title">Update Golden Ratio Goals</h4>
 				</div>
 				<div class="modal-body">
-					<form class="form-horizontal">
+					<form class="form-horizontal" id="formGreekGod">
 						<fieldset>
 							<div class="form-group">
 								<label for="inputGreekWrist" class="col-md-4 control-label">Wrist Circumference</label>
@@ -215,6 +215,32 @@
 				</div>
 			</div>
 		</div>
+        <script>
+            $("#formGreekGod").submit(function(e){
+                e.preventDefault();
+                var wristCirc = $("#inputGreekWrist").val();
+                console.log("User entered a wrist circumference of " + String(wristCirc));
+
+                var returnData;
+
+                // this it querying a 3rd party site until I have a known-good formula
+                $.ajax({
+                    type: "post",
+                    url: "http://www.fitness.com/tools/greek_proportions/grith.php",
+                    data: 'txtWrist='+String(wristCirc)+'&txtUnit=inches',
+                    dataType: "json",
+                    success: function(data) {
+                        console.log("Successfully hit third party site for wrist measurement!")
+                        console.log(data);
+                        returnData = data;
+                    },
+                    error: function() {
+                        console.log("Failed to grab measurements from third party");
+                    }
+                });
+            });
+
+        </script>
 	</div>
 	
 	<div class="modal" id="modal_updatename">
