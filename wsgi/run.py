@@ -23,7 +23,6 @@ db = SQLAlchemy(app)
 mail = Mail(app)
 manager = flask.ext.restless.APIManager(app, flask_sqlalchemy_db=db)
 
-
 # ## Database table definitions ###
 
 class User(db.Model):
