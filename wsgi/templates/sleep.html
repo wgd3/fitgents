@@ -124,7 +124,7 @@
                             Average Sleep Start: <span class="label label-primary pull-right">{{ sleep_stats.avg_sleep_start }}</span>
                         </h4></li>
                          <li class="list-group-item" style="padding: 0"><h4>
-                            Average Sleep Quality: <span class="label label-primary pull-right">{{ sleep_stats.avg_quality }}%</span>
+                            Average Sleep Quality: <span class="label label-primary pull-right">{{ sleep_stats.avg_quality|round(2,'floor') }}%</span>
                         </h4></li>
                         {% else %}
                         <li class="list-group-item" style="padding: 0">Something went wrong with the sleep stats!</li>

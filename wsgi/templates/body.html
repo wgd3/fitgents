@@ -125,31 +125,31 @@
 			<div class="col-md-4">
 				<div class="well">
 					<ul class="list-group">
-						<li class="list-group-item" style="padding: 0;"><h3>
+						<li class="list-group-item" style="padding: 0;"><h4>
 							Net Weight Change
 							{% if g.user.startlog.weight > g.user.currentlog.weight %}
 							<span class="label label-success pull-right">-{{ g.user.startlog.weight - g.user.currentlog.weight }}lbs</span>
 							{% else %}
 							<span class="label label-danger pull-right">+{{ g.user.currentlog.weight - g.user.startlog.weight }}lbs</span>
 							{% endif %}
-						</h3></li>
-						<li class="list-group-item" style="padding: 0;"><h3>
+						</h4></li>
+						<li class="list-group-item" style="padding: 0;"><h4>
 							Net BodyFat Change
 							{% if g.user.startlog.bodyfat > g.user.currentlog.bodyfat %}
 							<span class="label label-success pull-right">-{{ g.user.startlog.bodyfat - g.user.currentlog.bodyfat }}%</span>
 							{% else %}
 							<span class="label label-danger pull-right">+{{ g.user.startlog.bodyfat - g.user.currentlog.bodyfat }}%</span>
 							{% endif %}
-						</h3></li>
+						</h4></li>
 						<li class="list-group-item" style="padding: 0">
-							<h3>
+							<h4>
 							Net Lean Muscle
 							{% if g.user.startlog.lean_muscle > g.user.currentlog.lean_muscle %}
 								<span class="label label-danger pull-right">-{{ g.user.startlog.lean_muscle - g.user.currentlog.lean_muscle }}lbs</span>
 							{% else %}
 								<span class="label label-success pull-right">+{{ g.user.currentlog.lean_muscle - g.user.startlog.lean_muscle }}lbs</span>
 							{% endif %}
-							</h3>
+							</h4>
 						</li>
 					</ul>
 				</div>
