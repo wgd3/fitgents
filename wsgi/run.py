@@ -1088,6 +1088,29 @@ def updateProfile(detail):
         flash("You must be logged in to update your profile.", "warning")
         return redirect(url_for("index"))
 
+@app.route("/admin")
+def admin():
+    if "user_id" in session:
+        if g.user.is_admin:
+            print "Verified admin is loading the admin page"
+
+            # get a list of all users
+            userlist = User.query.all()
+            bodyRecordCount = BodyHistory.query.count()
+            foodRecordCount = FoodHistory.query.count()
+            sleepRecordCount = SleepHistory.query.count()
+
+            return render_template("admin.html",
+                                   users=userlist,
+                                   bodyRecordCount=bodyRecordCount,
+                                   foodRecordCount=foodRecordCount,
+                                   sleepRecordCount=-sleepRecordCount)
+        else:
+            flash("You must be an admin to view the admin page!", "info")
+            return redirect(url_for("index"))
+    else:
+        flash("You must be logged in and an admin to view the admin page!", "info")
+        return redirect(url_for("index"))
 
 @app.route('/email/test')
 def emailTest():
