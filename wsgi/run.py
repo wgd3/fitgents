@@ -932,6 +932,37 @@ def profile():
         flash("Must be logged in to view profiles.", "info")
         return redirect(url_for("index"))
 
+@app.route("/profile/goldenratio", methods=["POST"])
+def updateGoldenRatio(wrist):
+    if "user_id" in session:
+        print "Updating golden ratio goals for user %s" % g.user.name
+        if request.form['inputGreekWrist'] > 0:
+            # grab the user to update
+            current_user = User.query.get(session['user_id'])
+            wrist = request.form['inputGreekWrist']
+            greek_chest = 6.5 * wrist
+            current_user.greek_chest = greek_chest
+            current_user.greek_hips = greek_chest * .85
+            current_user.greek_waist = greek_chest * .7
+            current_user.greek_thigh = greek_chest *.53
+            current_user.greek_neck = greek_chest * .37
+            current_user.greek_bicep = greek_chest * .36
+            current_user.greek_calf = greek_chest * .34
+            current_user.greek_forearm = greek_chest * .29
+            current_user.greek_wrist = request.form['inputGreekWrist']
+
+            try:
+                db.session.commit()
+                return redirect(url_for("profile"))
+
+            except Exception as e:
+                print str(e)
+                flash("There was an error updating your golden ratio goals", "warning")
+                return redirect(url_for("profile"))
+    else:
+        flash("You must be logged in to update your profile.", "info")
+        return redirect(url_for("index"))
+
 
 @app.route("/profile/activate/<payload>")
 def activate_user(payload):

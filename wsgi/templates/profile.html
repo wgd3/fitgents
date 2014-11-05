@@ -195,7 +195,7 @@
 					<h4 class="modal-title">Update Golden Ratio Goals</h4>
 				</div>
 				<div class="modal-body">
-					<form class="form-horizontal" id="formGreekGod">
+					<form class="form-horizontal" id="formGreekGod" method="post" action="/profile/goldenratio">
 						<fieldset>
 							<div class="form-group">
 								<label for="inputGreekWrist" class="col-md-4 control-label">Wrist Circumference</label>
@@ -215,34 +215,6 @@
 				</div>
 			</div>
 		</div>
-        <script>
-            $("#formGreekGod").submit(function(e){
-                e.preventDefault();
-                var wristCirc = $("#inputGreekWrist").val();
-                console.log("User entered a wrist circumference of " + String(wristCirc));
-
-                // calculate values
-                var greek_chest = 6.5 * wristCirc;
-                var greek_hips = greek_chest * .85;
-                var greek_waist = greek_chest * .7;
-                var greek_thigh = greek_chest *.53;
-                var greek_neck = greek_chest * .37;
-                var greek_bicep = greek_chest * .36;
-                var greek_calf = greek_chest * .34;
-                var greek_forearms = greek_chest * .29;
-
-                console.log("Found ideal values:");
-                console.log(String(greek_chest));
-                console.log(String(greek_hips));
-                console.log(String(greek_waist));
-                console.log(String(greek_thigh));
-                console.log(String(greek_neck));
-                console.log(String(greek_bicep));
-                console.log(String(greek_calf));
-                console.log(String(greek_forearms));
-            });
-
-        </script>
 	</div>
 	
 	<div class="modal" id="modal_updatename">
