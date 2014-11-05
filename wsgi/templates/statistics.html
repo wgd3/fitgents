@@ -10,7 +10,46 @@
 			<div class="progress-bar" style="width: 1%" id="statLoadProgress"></div>
 		</div>
 	</div>
-	
+
+    <div class="col-md-6">
+        <div class="page-header" style="margin-top: 0; padding-bottom: 0;">
+            <h3 style="margin-top: 10px">Site-specific correlation to body fat loss</h3>
+        </div>
+        <p>This measurement uses the <a href="http://en.wikipedia.org/wiki/Pearson_product-moment_correlation_coefficient">Pearson correlation algorithm</a> to compare overall body fat loss stats to the skinfold measurements on each location.
+        The equation take 2 arrays of data for comparison, in this case the first array is all logged body fat levels, and the second are logs specific to a body location.</p>
+        <p>A higher or 'Strong' correlation (closer to 1) indicates that with overall body fat-loss, that site will be more likely to quickly lose fat than other locations.</p>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+                {% if bf is defined %}
+                <table class="table table-condensed table-striped">
+                    <thead>
+                        <th>Body Location</th>
+                        <th>Correlation</th>
+                        <th>Rating</th>
+                    </thead>
+                    <tbody>
+                    {% for corr in bf|dictsort(false, 'value')|reverse %}
+                    <tr>
+                        <th>{{ corr[0]|replace("fat_","")|capitalize }}</th>
+                        <td>{{ corr[1]|float|round(4, 'floor') }}</td>
+                        <td>
+                            {% if corr[1]|float > 0.75 %}
+                            Strong
+                            {% elif corr[1]|float > -0.5 %}
+                            Normal
+                            {% else %}
+                            Weak
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% endif %}
+        </div>
+     </div>
 	
 	{% else %}
 	<p>You must be logged in to view your stats!</p>

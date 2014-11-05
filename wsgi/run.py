@@ -1,4 +1,4 @@
-import os, datetime, sys, csv, time
+import os, datetime, sys, csv, time, math
 from flask import Flask
 from flask import render_template, jsonify
 from flask import request, session, redirect, flash, g, url_for
@@ -904,13 +904,19 @@ def statistics():
             g.user.sleeplog = user.sleep_history.all()
             g.user.bodylog = user.body_history.all()
 
-            return render_template("statistics.html")
+            # custom sorting method
+            #def sortCorrValue(item):
+             #   return item[1]
+            #bfCorrelations = sorted(testCorrelation(), key=sortCorrValue)
+            bfCorrelations = testCorrelation()
 
+            return render_template("statistics.html",
+                                   bf=bfCorrelations)
 
         except Exception as e:
             print str(e)
             flash("There was a problem grabbing user data from the database.", "warning")
-            return redirect(url_for("statistics"))
+            return render_template("statistics.html")
     else:
         flash("You must be logged in to see your statistics", "info")
         return render_template("statistics.html")
@@ -1111,6 +1117,39 @@ def admin():
     else:
         flash("You must be logged in and an admin to view the admin page!", "info")
         return redirect(url_for("index"))
+
+@app.route('/stat/testcorrelation')
+def testCorrelation():
+    user = User.query.get(5)
+    bodylogs = user.body_history.all()
+
+    columnNames = ['fat_abdominal',
+                   'fat_chest',
+                   'fat_midaxillary',
+                   'fat_subscapular',
+                   'fat_suprailiac',
+                   'fat_thigh',
+                   'fat_tricep']
+    bfArray = []
+    measurements = {}
+    for name in columnNames:
+        measurements[name] = []
+
+    for log in bodylogs:
+        bfArray.append(log.bodyfat)
+        for name in columnNames:
+            measurements[name].append(getattr(log, name))
+
+    print str(bfArray)
+    for name in columnNames:
+        print str(measurements[name])
+
+    bfCorrelations = {}
+    for name in columnNames:
+        bfCorrelations[name] = str(pearson_def(bfArray, measurements[name]))
+
+    #sortedCorrelations = sorted([[k,v] for (v,k) in bfCorrelations.items()], reverse=True)
+    return bfCorrelations
 
 @app.route('/email/test')
 def emailTest():
