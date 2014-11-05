@@ -148,11 +148,16 @@ class BodyHistory(db.Model):
     weight = db.Column(db.Float)
     bodyfat = db.Column(db.Float)
     lean_muscle = db.Column(db.Float)
+
     circ_chest = db.Column(db.Float, nullable=True)
+    circ_forearm = db.Column(db.Float, nullable=True)
     circ_waist = db.Column(db.Float, nullable=True)
     circ_thigh = db.Column(db.Float, nullable=True)
+    circ_hip = db.Column(db.Float, nullable=True)
+    circ_calf = db.Column(db.Float, nullable=True)
     circ_neck = db.Column(db.Float, nullable=True)
     circ_upperarm = db.Column(db.Float, nullable=True)
+
     fat_chest = db.Column(db.Integer, nullable=True)
     fat_abdominal = db.Column(db.Integer, nullable=True)
     fat_thigh = db.Column(db.Integer, nullable=True)
@@ -826,14 +831,14 @@ def body():
             print "Found %d entries in user's body log" % bodyLogCount
 
             if bodyLogCount > 0:
-                g.user.bodylog = user.body_history.order_by(db.asc(BodyHistory.timestamp))
+                g.user.bodylog = user.body_history.order_by(db.desc(BodyHistory.timestamp)).limit(8)
                 g.user.startlog = user.body_history.order_by(db.asc(BodyHistory.timestamp)).first()
                 g.user.currentlog = user.body_history.order_by(db.desc(BodyHistory.timestamp)).first()
             return render_template("body.html")
         except Exception as e:
             print "ERROR: " + str(e)
             flash("There was a problem grabbing the body logs from the database.", "warning")
-            return redirect(url_for("body"))
+            return render_template("body.html")
     else:
         return render_template("body.html")
 
@@ -845,20 +850,6 @@ def addbodylog():
         # make sure all the fields have been filled out
         timestamp = request.form['inputDate']
         weight = request.form['inputWeight']
-        bodyfat = request.form['inputBodyFat']
-        lean_muscle = request.form['inputLeanMuscle']
-        circ_chest = request.form['inputCircChest']
-        circ_waist = request.form['inputCircWaist']
-        circ_thigh = request.form['inputCircThigh']
-        circ_neck = request.form['inputCircNeck']
-        circ_upperarm = request.form['inputCircArm']
-        fat_chest = request.form['inputFatChest']
-        fat_abdominal = request.form['inputFatAbdominal']
-        fat_thigh = request.form['inputFatThigh']
-        fat_tricep = request.form['inputFatTricep']
-        fat_subscapular = request.form['inputFatSubscapular']
-        fat_suprailiac = request.form['inputFatSuprailiac']
-        fat_midaxillary = request.form['inputFatMidaxillary']
 
         if not timestamp or not weight:
             flash("Timestamp and weight fields required for body log.", "warning")
@@ -870,8 +861,11 @@ def addbodylog():
                                bodyfat=request.form['inputBodyFat'],
                                lean_muscle=request.form['inputLeanMuscle'],
                                circ_chest=request.form['inputCircChest'],
+                               circ_forearm=request.form['inputCircForearm'],
                                circ_waist=request.form['inputCircWaist'],
                                circ_thigh=request.form['inputCircThigh'],
+                               circ_hip=request.form['inputCircHip'],
+                               circ_calf=request.form['inputCircCalf'],
                                circ_neck=request.form['inputCircNeck'],
                                circ_upperarm=request.form['inputCircArm'],
                                fat_chest=request.form['inputFatChest'],
