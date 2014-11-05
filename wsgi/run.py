@@ -933,7 +933,7 @@ def profile():
         return redirect(url_for("index"))
 
 @app.route("/profile/goldenratio", methods=["POST"])
-def updateGoldenRatio(wrist):
+def updateGoldenRatio():
     if "user_id" in session:
         print "Updating golden ratio goals for user %s" % g.user.name
         if request.form['inputGreekWrist'] > 0:
