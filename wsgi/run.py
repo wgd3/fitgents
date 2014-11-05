@@ -310,8 +310,8 @@ def login():
                     print "Found at least one user with email %s" % request.form['inputEmail']
                     loginUser = User.query.filter_by(email=request.form['inputEmail']).first()
 
-                    print "Found a user to log in, checking entered password %s" % (request.form['inputPassword'])
-                    print loginUser.__dict__
+                    #print "Found a user to log in, checking entered password %s" % (request.form['inputPassword'])
+                    #print loginUser.__dict__
 
                     if loginUser.is_valid_password(request.form['inputPassword']):
                         print "Passwork checks out! Logging in user"
@@ -939,10 +939,10 @@ def updateGoldenRatio():
         if request.form['inputGreekWrist'] > 0:
             # grab the user to update
             current_user = User.query.get(session['user_id'])
-            wrist = request.form['inputGreekWrist']
+            wrist = float(request.form['inputGreekWrist'])
             greek_chest = 6.5 * wrist
             current_user.greek_chest = greek_chest
-            current_user.greek_hips = greek_chest * .85
+            current_user.greek_hip = greek_chest * .85
             current_user.greek_waist = greek_chest * .7
             current_user.greek_thigh = greek_chest *.53
             current_user.greek_neck = greek_chest * .37

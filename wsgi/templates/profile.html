@@ -107,34 +107,68 @@
                 <div class="row">
                 {% if g.user.greek_wrist != 0 %}
                     <div class="well">
-                        <h3 style="margin-top: 10px">Golden Ratio Goal</h3>
-                        <table class="table table-condensed">
+                        <h3 style="margin-top: 0px">Golden Ratio Goal <small><a href="#" id="goldenMeasurementSwitch" data-unit="in">(switch to cm)</a></small>
+                            <a href="#" class="btn btn-default btn-primary pull-right" data-toggle="modal" data-target="#modal_greekgod">Update Goals</a>
+                        </h3>
+                        <script>
+                            $("#goldenMeasurementSwitch").on('click', function(){
+                                if ($(this).data('unit') == 'cm'){
+                                    console.log("Switching golden ratio unit type from cm to in");
+                                    // change data attribute
+                                    $(this).data('unit', 'in');
+                                    // update link text
+                                    $(this).text("(switch to in)");
+                                    // grab all fields, update each of them
+                                    $("#table-golden-ratio").find("td").each(function(){
+                                        var value = parseFloat($(this).text().replace('cm',''), 2)
+                                        console.log("Changing value " + String(value) + " to inches");
+                                        var newValue = value / 2.54;
+                                        $(this).text(newValue.toFixed(2)+"in")
+                                    });
+
+                                } else {
+                                    console.log("Switching golden ratio unit type from in to cm");
+                                    // change data attribute
+                                    $(this).data('unit', 'cm');
+                                    // update link text
+                                    $(this).text("(switch to cm)");
+                                    $("#table-golden-ratio").find("td").each(function(){
+                                        var value = parseFloat($(this).text().replace('in',''))
+                                        console.log("Changing value " + String(value) + " to centimeters");
+                                        var newValue = value * 2.54;
+                                        $(this).text(newValue.toFixed(2)+"cm")
+                                    });
+                                }
+                            });
+                        </script>
+                        <br>
+                        <table id="table-golden-ratio" class="table table-condensed">
                             <tbody>
                                 <tr>
                                     <th>Chest </th>
-                                    <td id="greek_chest">{{ g.user.greek_chest }}</td>
+                                    <td id="greek_chest">{{ g.user.greek_chest|round(2, 'floor') }}in</td>
 
                                     <th>Forearm </th>
-                                    <td id="greek_forearm">{{ g.user.greek_forearm }}</td>
+                                    <td id="greek_forearm">{{ g.user.greek_forearm|round(2, 'floor') }}in</td>
 
                                     <th>Waist </th>
-                                    <td id="greek_waist">{{ g.user.greek_waist }}</td>
+                                    <td id="greek_waist">{{ g.user.greek_waist|round(2, 'floor') }}in</td>
 
                                     <th>Thigh </th>
-                                    <td id="greek_thigh">{{ g.user.greek_thigh }}</td>
+                                    <td id="greek_thigh">{{ g.user.greek_thigh|round(2, 'floor') }}in</td>
                                 </tr>
                                 <tr>
                                     <th>Hip </th>
-                                    <td id="greek_hip">{{ g.user.greek_hip }}</td>
+                                    <td id="greek_hip">{{ g.user.greek_hip|round(2, 'floor') }}in</td>
 
                                     <th>Calf </th>
-                                    <td id="greek_calf">{{ g.user.greek_calf }}</td>
+                                    <td id="greek_calf">{{ g.user.greek_calf|round(2, 'floor') }}in</td>
 
                                     <th>Bicep </th>
-                                    <td id="greek_bicep">{{ g.user.greek_bicep }}</td>
+                                    <td id="greek_bicep">{{ g.user.greek_bicep|round(2, 'floor') }}in</td>
 
                                     <th>Neck </th>
-                                    <td id="greek_neck">{{ g.user.greek_neck }}</td>
+                                    <td id="greek_neck">{{ g.user.greek_neck|round(2, 'floor') }}in</td>
                                 </tr>
                             </tbody>
                         </table>
