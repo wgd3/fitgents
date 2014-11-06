@@ -2,55 +2,197 @@
 
 {% block body %}
 
-	{% if g.user.name != "Guest" %}
-    <div class="row">
-        <div class="page-header" style="margin-top: 10px;">
-            <h1>Statistics</h1>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-6">
-            <div class="page-header" style="margin-top: 0; padding-bottom: 0;">
-                <h3 style="margin-top: 10px">Site-specific correlation to body fat loss</h3>
+        {% if g.user.name != "Guest" %}
+        <div class="row">
+            <div class="page-header" style="margin-top: 10px;">
+                <h1>Statistics</h1>
             </div>
-            <p>This measurement uses the <a href="http://en.wikipedia.org/wiki/Pearson_product-moment_correlation_coefficient">Pearson correlation algorithm</a> to compare overall body fat loss stats to the skinfold measurements on each location.
-            The equation take 2 arrays of data for comparison, in this case the first array is all logged body fat levels, and the second are logs specific to a body location.</p>
-            <p>A higher or 'Strong' correlation (closer to 1) indicates that with overall body fat-loss, that site will be more likely to quickly lose fat than other locations.</p>
         </div>
 
-        <div class="col-md-6">
-                {% if bf is defined %}
-                <table class="table table-condensed table-striped" style="margin-top: 10px;">
+<!--        <div class="row">
+            <div class="col-md-3">
+                <div class="col-md-12 text-center">
+                    <a href="#" class="btn btn-default btn-primary"><span class="glyphicon glyphicon-arrow-up"></span></a>
+                </div>
+                <div class="col-md-12 text-center">
+                    <h3>{% for log in g.user.bodylog[-1:] %}{{ log.bodyfat }}%{% endfor %}</h3>
+                </div>
+                <div class="col-md-12 text-center">
+                    <a href="#" class="btn btn-default btn-primary"><span class="glyphicon glyphicon-arrow-down"></span></a>
+                </div>
+            </div>
+            <div class="col-md-9">
+
+            </div>
+        </div>-->
+
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="page-header" style="margin-top: 0; padding-bottom: 0;">
+                    <h3 style="margin-top: 10px">Site-specific correlation to body fat loss</h3>
+                </div>
+                <p>This measurement uses the <a href="http://en.wikipedia.org/wiki/Pearson_product-moment_correlation_coefficient">Pearson correlation algorithm</a> to compare overall body fat loss stats to the skinfold measurements on each location.
+                The equation take 2 arrays of data for comparison, in this case the first array is all logged body fat levels, and the second are logs specific to a body location.</p>
+                <p>A higher or 'Strong' correlation (closer to 1) indicates that with overall body fat-loss, that site will be more likely to quickly lose fat than other locations.</p>
+            </div>
+
+            <div class="col-md-6">
+                    {% if bf is defined %}
+                    <table class="table table-condensed table-striped" style="margin-top: 10px;">
+                        <thead>
+                            <th>Body Location</th>
+                            <th>Correlation</th>
+                            <th>Rating</th>
+                            <th class="text-center">avg mm change / {{ mmPerBf.bodyfat|round(2) }}% body fat</th>
+                        </thead>
+                        <tbody>
+                        {% for corr in bf|dictsort(false, 'value')|reverse %}
+                        <tr>
+                            <th>{{ corr[0]|replace("fat_","")|capitalize }}</th>
+                            <td>{{ corr[1]|float|round(4, 'floor') }}</td>
+                            <td>
+                                {% if corr[1]|float > 0.75 %}
+                                Strong
+                                {% elif corr[1]|float > -0.5 %}
+                                Normal
+                                {% else %}
+                                Weak
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                {{ mmPerBf[corr[0]]|round(2) }}mm
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    {% endif %}
+            </div>
+         </div>
+
+        <hr>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="page-header" style="margin-top: 10px; padding-bottom: 0;">
+                    <h3>Reaching Greek god-status</h3>
+                </div>
+                <p>The <a href="http://en.wikipedia.org/wiki/Golden_ratio">Golden Ratio</a> is a ratio that occurs naturally in almost everything. It is believed that ratios close-to or matching this are perceived as "more beautiful" to humans.</p>
+                <p>This table shows circumference goals for certain body parts as calculated by your profile. It theoretically will estimate what is needed to reach a figure matching the golden ratio.</p>
+            </div>
+            <div class="col-md-6">
+                <table class="table table-condensed table-striped text-center">
                     <thead>
-                        <th>Body Location</th>
-                        <th>Correlation</th>
-                        <th>Rating</th>
+                        <th>Circumference Location</th>
+                        <th>Current Measurement</th>
+                        <th>Goal Measurement</th>
+                        <th>Estimated Days</th>
                     </thead>
                     <tbody>
-                    {% for corr in bf|dictsort(false, 'value')|reverse %}
-                    <tr>
-                        <th>{{ corr[0]|replace("fat_","")|capitalize }}</th>
-                        <td>{{ corr[1]|float|round(4, 'floor') }}</td>
-                        <td>
-                            {% if corr[1]|float > 0.75 %}
-                            Strong
-                            {% elif corr[1]|float > -0.5 %}
-                            Normal
-                            {% else %}
-                            Weak
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% endfor %}
+                        <tr>
+                            <th>Chest</th>
+                            <td>{{ g.user.currentBodyLog.circ_chest }}in</td>
+                            <td>{{ g.user.greek_chest|round(2) }}in</td>
+                            <td>
+                                {% if timeTillGreek.chest != 0.0 %}
+                                    {{ (g.user.greek_chest - g.user.currentBodyLog.circ_chest ) / timeTillGreek.chest }}
+                                {% else %}
+                                    Unclear
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Waist</th>
+                            <td>{{ g.user.currentBodyLog.circ_waist }}in</td>
+                            <td>{{ g.user.greek_waist|round(2) }}in</td>
+                            <td>
+                                {% if timeTillGreek.waist != 0.0 %}
+                                    {{ (g.user.greek_waist - g.user.currentBodyLog.circ_waist ) / timeTillGreek.waist }}
+                                {% else %}
+                                    Unclear
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Bicep</th>
+                            <td>{{ g.user.currentBodyLog.circ_upperarm }}in</td>
+                            <td>{{ g.user.greek_bicep|round(2) }}in</td>
+                            <td>
+                                {% if timeTillGreek.bicep != 0.0 %}
+                                    {{ (g.user.greek_bicep - g.user.currentBodyLog.circ_upperarm ) / timeTillGreek.bicep }}
+                                {% else %}
+                                    Unclear
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Thigh</th>
+                            <td>{{ g.user.currentBodyLog.circ_thigh }}in</td>
+                            <td>{{ g.user.greek_thigh|round(2) }}in</td>
+                            <td>
+                                {% if timeTillGreek.thigh != 0.0 %}
+                                    {{ (g.user.greek_thigh - g.user.currentBodyLog.circ_thigh ) / timeTillGreek.thigh }}
+                                {% else %}
+                                    Unclear
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Neck</th>
+                            <td>{{ g.user.currentBodyLog.circ_neck }}in</td>
+                            <td>{{ g.user.greek_neck|round(2) }}in</td>
+                            <td>
+                                {% if timeTillGreek.neck != 0.0 %}
+                                    {{ (g.user.greek_neck - g.user.currentBodyLog.circ_neck ) / timeTillGreek.neck }}
+                                {% else %}
+                                    Unclear
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Calf</th>
+                            <td>{{ g.user.currentBodyLog.circ_calf }}in</td>
+                            <td>{{ g.user.greek_calf|round(2) }}in</td>
+                            <td>
+                                {% if timeTillGreek.calf != 0.0 %}
+                                    {{ (g.user.greek_calf - g.user.currentBodyLog.circ_calf ) / timeTillGreek.calf }}
+                                {% else %}
+                                    Unclear
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Forearm</th>
+                            <td>{{ g.user.currentBodyLog.circ_forearm }}in</td>
+                            <td>{{ g.user.greek_forearm|round(2) }}in</td>
+                            <td>
+                                {% if timeTillGreek.forearm != 0.0 %}
+                                    {{ (g.user.greek_forearm - g.user.currentBodyLog.circ_forearm ) / timeTillGreek.forearm }}
+                                {% else %}
+                                    Unclear
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Hip</th>
+                            <td>{{ g.user.currentBodyLog.circ_hip }}in</td>
+                            <td>{{ g.user.greek_hip|round(2) }}in</td>
+                            <td>
+                                {% if timeTillGreek.hip != 0.0 %}
+                                    {{ (g.user.greek_hip - g.user.currentBodyLog.circ_hip ) / timeTillGreek.hip }}
+                                {% else %}
+                                    Unclear
+                                {% endif %}
+                            </td>                        
+                        </tr>
                     </tbody>
                 </table>
-                {% endif %}
+            </div>
         </div>
-     </div>
-	
-	{% else %}
-	<p>You must be logged in to view your stats!</p>
-	{% endif %}
+
+        {% else %}
+        <p>You must be logged in to view your stats!</p>
+        {% endif %}
 
 {% endblock %}

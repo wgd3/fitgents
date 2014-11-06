@@ -193,6 +193,7 @@ class ExcerciseList(db.Model):
 
 # Create REST API endpoints
 manager.create_api(User, methods=['GET', 'POST', 'PUT', 'DELETE', 'PATCH'])
+manager.create_api(BodyHistory, methods=['GET', 'POST', 'PUT', 'DELETE', 'PATCH'])
 
 #############
 # Application decorators
@@ -578,12 +579,8 @@ def excercise():
 
                 cycPace = 0
                 for log in excerciseLog:
-                    print log.distance.__class__
-                    print log.time.__class__
-                    print "Diving %d by %d to add to cycPace: %d" % (log.distance, log.time, (int(log.distance)/log.time))
-                    cycPace += (log.distance / log.time)
-                    print "cycPace: %d" % cycPace
-                print "Setting cycAvgPace with the following formula: %d / %d" % (cycPace, excerciseLogCount)
+                    print "Diving %d by %d to add to cycPace: %f" % (log.time, log.distance, log.time/log.distance)
+                    cycPace += (log.time / log.distance)
                 cycAvgPace = cycPace / excerciseLogCount
 
                 cycDistance = 0
@@ -899,19 +896,21 @@ def statistics():
     if "user_id" in session:
         try:
             user = User.query.get(session['user_id'])
-
-            g.user.foodlog = user.food_history.all()
-            g.user.sleeplog = user.sleep_history.all()
             g.user.bodylog = user.body_history.all()
+            g.user.firstBodyLog = user.body_history.order_by(db.asc(BodyHistory.timestamp)).first()
+            g.user.currentBodyLog = user.body_history.order_by(db.desc(BodyHistory.timestamp)).first()
 
-            # custom sorting method
-            #def sortCorrValue(item):
-             #   return item[1]
-            #bfCorrelations = sorted(testCorrelation(), key=sortCorrValue)
-            bfCorrelations = testCorrelation()
+            bfCorrelations = getBfCorrelation()
+
+            mmPerBf = getMmPerBf()
+
+            timeTillGreek = getTimeTillGreek()
+            print str(timeTillGreek)
 
             return render_template("statistics.html",
-                                   bf=bfCorrelations)
+                                   bf=bfCorrelations,
+                                   mmPerBf=mmPerBf,
+                                   timeTillGreek=timeTillGreek)
 
         except Exception as e:
             print str(e)
@@ -1118,9 +1117,29 @@ def admin():
         flash("You must be logged in and an admin to view the admin page!", "info")
         return redirect(url_for("index"))
 
+@app.route('/email/test')
+def emailTest():
+    if 'MAIL_USERNAME' in os.environ and 'MAIL_PASSWORD' in os.environ:
+        msg = Message("This is a test of the FitGents email service!",
+                      sender='fitgents@gmail.com',
+                      recipients=['wallace.daniel3@me.com'])
+        mail.send(msg)
+
+        flash("Test email sent", "success")
+        return redirect(url_for("index"))
+
+    else:
+        flash("Env variables aren't set properly for the mail system", "warning")
+        return redirect(url_for("index"))
+
+
+###########################################
+# Statistic methods
+###########################################
+
 @app.route('/stat/testcorrelation')
-def testCorrelation():
-    user = User.query.get(5)
+def getBfCorrelation():
+    user = User.query.get(session['user_id'])
     bodylogs = user.body_history.all()
 
     columnNames = ['fat_abdominal',
@@ -1151,25 +1170,69 @@ def testCorrelation():
     #sortedCorrelations = sorted([[k,v] for (v,k) in bfCorrelations.items()], reverse=True)
     return bfCorrelations
 
-@app.route('/email/test')
-def emailTest():
-    if 'MAIL_USERNAME' in os.environ and 'MAIL_PASSWORD' in os.environ:
-        msg = Message("This is a test of the FitGents email service!",
-                      sender='fitgents@gmail.com',
-                      recipients=['wallace.daniel3@me.com'])
-        mail.send(msg)
+@app.route('/stat/testmmperbf')
+def getMmPerBf():
+    user = User.query.get(session['user_id'])
+    bodylogs = user.body_history.order_by(db.desc(BodyHistory.timestamp)).all()
 
-        flash("Test email sent", "success")
-        return redirect(url_for("index"))
+    changeBodyFat = []
+    changeAbdominal = []
+    changeChest = []
+    changeMidaxillary = []
+    changeSubscapular = []
+    changeSuprailiac = []
+    changeThigh = []
+    changeTricep = []
 
-    else:
-        flash("Env variables aren't set properly for the mail system", "warning")
-        return redirect(url_for("index"))
+    # first, find all the changes in logs
+    numLogs = user.body_history.count()
+    for x in range(1, numLogs):
+        currentLog = bodylogs[x]
+        previousLog = bodylogs[x-1]
 
+        changeBodyFat.append(previousLog.bodyfat - currentLog.bodyfat)
+        changeAbdominal.append(previousLog.fat_abdominal - currentLog.fat_abdominal)
+        changeChest.append(previousLog.fat_chest - currentLog.fat_chest)
+        changeMidaxillary.append(previousLog.fat_midaxillary - currentLog.fat_midaxillary)
+        changeSubscapular.append(previousLog.fat_subscapular - currentLog.fat_subscapular)
+        changeSuprailiac.append(previousLog.fat_suprailiac - currentLog.fat_suprailiac)
+        changeThigh.append(previousLog.fat_thigh - currentLog.fat_thigh)
+        changeTricep.append(previousLog.fat_tricep - currentLog.fat_tricep)
 
-###########################################
-# Statistic methods
-###########################################
+    averages = {}
+    averages['bodyfat'] =float(float(sum(changeBodyFat)) / len(changeBodyFat))
+    averages['fat_abdominal'] =float(float(sum(changeAbdominal)) / len(changeAbdominal))
+    averages['fat_chest'] =float(float(sum(changeChest)) / len(changeChest))
+    averages['fat_midaxillary'] =float(float(sum(changeMidaxillary)) / len(changeMidaxillary))
+    averages['fat_subscapular'] =float(float(sum(changeSubscapular)) / len(changeSubscapular))
+    averages['fat_suprailiac'] =float(float(sum(changeSuprailiac)) / len(changeSuprailiac))
+    averages['fat_thigh'] =float(float(sum(changeThigh)) / len(changeThigh))
+    averages['fat_tricep'] =float(float(sum(changeTricep)) / len(changeTricep))
+
+    return averages
+
+@app.route('/stat/timetillgreek')
+def getTimeTillGreek():
+    user = User.query.get(session['user_id'])
+    currentLog = user.body_history.order_by(db.desc(BodyHistory.timestamp)).first()
+    firstLog = user.body_history.order_by(db.asc(BodyHistory.timestamp)).first()
+
+    timeStart = currentLog.timestamp
+    timeEnd = firstLog.timestamp
+    timeDiff = (timeEnd - timeStart) * -1   # make sure it's a positive number
+    print "Time diff in days: " + str(timeDiff.days)
+
+    rates = {}
+    rates['chest'] = (currentLog.circ_chest - firstLog.circ_chest) / timeDiff.days
+    rates['calf'] = (currentLog.circ_calf - firstLog.circ_calf) / timeDiff.days
+    rates['forearm'] = (currentLog.circ_forearm - firstLog.circ_forearm) / timeDiff.days
+    rates['hip'] = (currentLog.circ_hip - firstLog.circ_hip) / timeDiff.days
+    rates['neck'] = (currentLog.circ_neck - firstLog.circ_neck) / timeDiff.days
+    rates['thigh'] = (currentLog.circ_thigh - firstLog.circ_thigh) / timeDiff.days
+    rates['bicep'] = (currentLog.circ_upperarm - firstLog.circ_upperarm) / timeDiff.days
+    rates['waist'] = (currentLog.circ_waist - firstLog.circ_waist) / timeDiff.days
+
+    return rates
 
 def average(x):
     assert len(x) > 0
